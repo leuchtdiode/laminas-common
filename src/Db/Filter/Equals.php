@@ -11,6 +11,7 @@ abstract class Equals implements Filter
 	const NULL      = 'null';
 	const NOT_NULL  = 'notNull';
 	const IN        = 'in';
+	const NOT_IN    = 'notIn';
 
 	/**
 	 * @var string
@@ -70,6 +71,15 @@ abstract class Equals implements Filter
 	}
 
 	/**
+	 * @param array $parameter
+	 * @return static
+	 */
+	public static function notIn(array $parameter)
+	{
+		return new static(self::NOT_IN, $parameter);
+	}
+
+	/**
 	 * @return Equals
 	 */
 	public static function isNull()
@@ -90,6 +100,8 @@ abstract class Equals implements Filter
 	 */
 	public function addClause(QueryBuilder $queryBuilder)
 	{
+		$parameterName = $this->getParameterName();
+
 		switch ($this->type)
 		{
 			case self::VALUE:
@@ -98,9 +110,9 @@ abstract class Equals implements Filter
 					->andWhere(
 						$queryBuilder
 							->expr()
-							->eq($this->getField(), ':' . $this->getParameterName())
+							->eq($this->getField(), ':' . $parameterName)
 					)
-					->setParameter($this->getParameterName(), $this->parameter);
+					->setParameter($parameterName, $this->parameter);
 
 				break;
 
@@ -110,9 +122,9 @@ abstract class Equals implements Filter
 					->andWhere(
 						$queryBuilder
 							->expr()
-							->neq($this->getField(), ':' . $this->getParameterName())
+							->neq($this->getField(), ':' . $parameterName)
 					)
-					->setParameter($this->getParameterName(), $this->parameter);
+					->setParameter($parameterName, $this->parameter);
 
 				break;
 
@@ -122,9 +134,21 @@ abstract class Equals implements Filter
 					->andWhere(
 						$queryBuilder
 							->expr()
-							->in($this->getField(), ':' . $this->getParameterName())
+							->in($this->getField(), ':' . $parameterName)
 					)
-					->setParameter($this->getParameterName(), $this->parameter);
+					->setParameter($parameterName, $this->parameter);
+
+				break;
+
+			case self::NOT_IN:
+
+				$queryBuilder
+					->andWhere(
+						$queryBuilder
+							->expr()
+							->notIn($this->getField(), ':' . $parameterName)
+					)
+					->setParameter($parameterName, $this->parameter);
 
 				break;
 
