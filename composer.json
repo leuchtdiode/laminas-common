@@ -1,0 +1,42 @@
+{
+	"name": "leuchtdiode/laminas-common",
+	"description": "Laminas module for common classes",
+	"type": "library",
+	"license": "MIT",
+	"homepage": "https://try2catch.com",
+	"authors": [
+		{
+			"name": "Alex Schloegl",
+			"email": "alex@try2catch.com",
+			"homepage": "https://try2catch.com",
+			"role": "Developer"
+		}
+	],
+	"keywords": [
+		"Zend Framework 3",
+		"Module"
+	],
+	"require": {
+		"php": ">=7.1",
+		"ext-json": "*",
+		"laminas/laminas-servicemanager": "^3.0",
+		"laminas/laminas-mvc-console": "^1.1",
+		"doctrine/doctrine-orm-module": "3.0.0",
+		"laminas/laminas-mvc-i18n": "^1.1",
+		"laminas/laminas-mvc": "^3.1",
+		"umpirsky/country-list": "^2.0"
+	},
+	"suggest": {
+		"ext-openssl": "*",
+		"ext-calendar": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Common\\": "src/",
+			"CommonTest\\": "test/src/"
+		}
+	},
+	"require-dev": {
+		"laminas/laminas-test": "^3.2"
+	}
+}
