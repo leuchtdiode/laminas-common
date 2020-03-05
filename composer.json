@@ -13,7 +13,7 @@
 		}
 	],
 	"keywords": [
-		"Zend Framework 3",
+		"Laminas",
 		"Module"
 	],
 	"require": {

@@ -1,25 +1,25 @@
 <?php
 namespace Common;
 
-use Laminas\Mvc\I18n\Translator as ZendTranslator;
+use Laminas\Mvc\I18n\Translator as LaminasTranslator;
 
 class Translator
 {
 	/**
-	 * @var ZendTranslator
+	 * @var LaminasTranslator
 	 */
 	private static $instance;
 
 	/**
-	 * @param ZendTranslator $translator
+	 * @param LaminasTranslator $translator
 	 */
-	public static function setInstance(ZendTranslator $translator)
+	public static function setInstance(LaminasTranslator $translator)
 	{
 		self::$instance = $translator;
 	}
 
 	/**
-	 * @return ZendTranslator
+	 * @return LaminasTranslator
 	 */
 	public static function getInstance()
 	{
