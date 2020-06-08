@@ -49,6 +49,19 @@ class Values
 	}
 
 	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function valueIsPresent($name)
+	{
+		$value = $this->get($name);
+
+		return $value
+			? $value->isPresent()
+			: false;
+	}
+
+	/**
 	 * @return Error[]
 	 */
 	public function getErrors()

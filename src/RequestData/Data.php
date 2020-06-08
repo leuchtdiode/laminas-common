@@ -7,8 +7,8 @@ use Common\RequestData\PropertyDefinition\PropertyDefinition;
 use Common\Translator;
 use Common\Util\StringUtil;
 use Exception;
-use Psr\Container\ContainerInterface;
 use Laminas\Stdlib\RequestInterface;
+use Psr\Container\ContainerInterface;
 
 abstract class Data
 {
@@ -98,11 +98,13 @@ abstract class Data
 	{
 		foreach ($definitions as $definition)
 		{
-			$rawValue = $this->getRawValue($definition);
+			$handledValue = $this->handleValue($definition);
+			$rawValue     = $handledValue['value'];
 
 			$value = new Value();
 			$value->setName($definition->getName());
 			$value->setValue($rawValue);
+			$value->setPresent($handledValue['present']);
 
 			$values->addValue($value);
 
@@ -184,9 +186,9 @@ abstract class Data
 
 	/**
 	 * @param PropertyDefinition $definition
-	 * @return mixed|null
+	 * @return array
 	 */
-	private function getRawValue(PropertyDefinition $definition)
+	private function handleValue(PropertyDefinition $definition)
 	{
 		$name = $definition->getName();
 
@@ -195,26 +197,40 @@ abstract class Data
 			$arrayIndexes = explode('.', $name);
 
 			$rawValue = $this->data[$arrayIndexes[0]] ?? null;
+			$present  = array_key_exists($arrayIndexes[0], $this->data);
 
 			if ($rawValue === null)
 			{
-				return null;
+				return [
+					'present' => $present,
+					'value'   => null,
+				];
 			}
 
 			foreach (array_slice($arrayIndexes, 1) as $arrIndex)
 			{
+				$present  = array_key_exists($arrIndex, $rawValue);
 				$rawValue = $rawValue[$arrIndex] ?? null;
 
 				if ($rawValue === null)
 				{
-					return null;
+					return [
+						'present' => $present,
+						'value'   => null,
+					];
 				}
 			}
 
-			return $rawValue;
+			return [
+				'present' => $present,
+				'value'   => $rawValue,
+			];
 		}
 
-		return $this->data[$name] ?? null;
+		return [
+			'present' => array_key_exists($name, $this->data),
+			'value'   => $this->data[$name] ?? null,
+		];
 	}
 
 	/**
