@@ -298,12 +298,12 @@
 			"label": "Estonia"
 		},
 		{
-			"isoCode": "ET",
-			"label": "Ethiopia"
+			"isoCode": "SZ",
+			"label": "Eswatini"
 		},
 		{
-			"isoCode": "EZ",
-			"label": "Eurozone"
+			"isoCode": "ET",
+			"label": "Ethiopia"
 		},
 		{
 			"isoCode": "FK",
@@ -531,11 +531,7 @@
 		},
 		{
 			"isoCode": "MO",
-			"label": "Macau SAR China"
-		},
-		{
-			"isoCode": "MK",
-			"label": "Macedonia"
+			"label": "Macao SAR China"
 		},
 		{
 			"isoCode": "MG",
@@ -670,6 +666,10 @@
 			"label": "North Korea"
 		},
 		{
+			"isoCode": "MK",
+			"label": "North Macedonia"
+		},
+		{
 			"isoCode": "MP",
 			"label": "Northern Mariana Islands"
 		},
@@ -724,6 +724,14 @@
 		{
 			"isoCode": "PT",
 			"label": "Portugal"
+		},
+		{
+			"isoCode": "XA",
+			"label": "Pseudo-Accents"
+		},
+		{
+			"isoCode": "XB",
+			"label": "Pseudo-Bidi"
 		},
 		{
 			"isoCode": "PR",
@@ -870,10 +878,6 @@
 			"label": "Svalbard \u0026 Jan Mayen"
 		},
 		{
-			"isoCode": "SZ",
-			"label": "Swaziland"
-		},
-		{
 			"isoCode": "SE",
 			"label": "Sweden"
 		},
@@ -968,10 +972,6 @@
 		{
 			"isoCode": "GB",
 			"label": "United Kingdom"
-		},
-		{
-			"isoCode": "UN",
-			"label": "United Nations"
 		},
 		{
 			"isoCode": "US",

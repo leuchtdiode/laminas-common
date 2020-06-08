@@ -16,6 +16,11 @@ class Value
 	private $value;
 
 	/**
+	 * @var bool
+	 */
+	private $present = false;
+
+	/**
 	 * @var Error[]
 	 */
 	private $errors = [];
@@ -55,6 +60,14 @@ class Value
 	}
 
 	/**
+	 * @param bool $present
+	 */
+	public function setPresent(bool $present): void
+	{
+		$this->present = $present;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getName(): string
@@ -68,6 +81,14 @@ class Value
 	public function getValue()
 	{
 		return $this->value;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isPresent(): bool
+	{
+		return $this->present;
 	}
 
 	/**

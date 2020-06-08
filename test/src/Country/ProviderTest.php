@@ -4,9 +4,9 @@ namespace CommonTest\Country;
 use Common\Country\Provider;
 use Common\Translator;
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Laminas\I18n\Translator\Translator as I18nTranslator;
 use Laminas\Mvc\I18n\Translator as MvcTranslator;
+use PHPUnit\Framework\TestCase;
 
 class ProviderTest extends TestCase
 {
@@ -34,7 +34,7 @@ class ProviderTest extends TestCase
 			->all();
 
 		$this->assertCount(255, $all);
-		$this->assertEquals('ZW', $all[count($all)-1]->getIsoCode());
+		$this->assertEquals('ZW', $all[count($all) - 1]->getIsoCode());
 		$this->assertEquals('AF', reset($all)->getIsoCode());
 	}
 
@@ -47,7 +47,8 @@ class ProviderTest extends TestCase
 	 */
 	public function test_results($locale, $isoCode, $expectedLabel)
 	{
-		Translator::getInstance()->setLocale($locale);
+		Translator::getInstance()
+			->setLocale($locale);
 
 		$country = (new Provider())
 			->byIsoCode($isoCode);
@@ -57,24 +58,28 @@ class ProviderTest extends TestCase
 	}
 
 	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Could not find country list file
 	 */
 	public function test_exception_thrown_on_invalid_locale()
 	{
-		Translator::getInstance()->setLocale('xx_XX');
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Could not find country list file');
+
+		Translator::getInstance()
+			->setLocale('xx_XX');
 
 		(new Provider())
 			->byIsoCode(self::ANY_ISO_CODE);
 	}
 
 	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Could not find country with iso code XX
 	 */
 	public function test_exception_thrown_on_invalid_iso_code()
 	{
-		Translator::getInstance()->setLocale(self::ANY_LOCALE);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Could not find country with iso code XX');
+
+		Translator::getInstance()
+			->setLocale(self::ANY_LOCALE);
 
 		(new Provider())
 			->byIsoCode('xx');
@@ -86,12 +91,12 @@ class ProviderTest extends TestCase
 	public function isoCodeSet()
 	{
 		return [
-			['de_DE', 'AT', 'Österreich'],
-			['en_EN', 'AT', 'Austria'],
-			['fr_FR', 'AT', 'Autriche'],
-			['de_DE', 'DE', 'Deutschland'],
-			['en_EN', 'DE', 'Germany'],
-			['fr_FR', 'DE', 'Allemagne'],
+			[ 'de_DE', 'AT', 'Österreich' ],
+			[ 'en_EN', 'AT', 'Austria' ],
+			[ 'fr_FR', 'AT', 'Autriche' ],
+			[ 'de_DE', 'DE', 'Deutschland' ],
+			[ 'en_EN', 'DE', 'Germany' ],
+			[ 'fr_FR', 'DE', 'Allemagne' ],
 		];
 	}
 }

@@ -8,10 +8,11 @@ use CommonTest\Base;
 class BaseUrlProviderTest extends Base
 {
 	/**
-	 * @expectedException Exception
 	 */
 	public function test_missing_config_throws_exception()
 	{
+		$this->expectException(Exception::class);
+
 		(new BaseUrlProvider([]))->get();
 	}
 
