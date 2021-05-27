@@ -12,16 +12,23 @@ class EntityRepository extends DoctrineEntityRepository
 	 * @param OrderChain|null $orderChain
 	 * @param int $offset
 	 * @param int $limit
+	 * @param bool $distinct
 	 * @return array
 	 */
 	public function filter(
 		FilterChain $filterChain,
 		OrderChain $orderChain = null,
 		$offset = 0,
-		$limit = PHP_INT_MAX
+		$limit = PHP_INT_MAX,
+		bool $distinct = false
 	)
 	{
 		$queryBuilder = $this->createQueryBuilder('t');
+
+		if ($distinct)
+		{
+			$queryBuilder->distinct();
+		}
 
 		foreach($filterChain->getFilters() as $filter)
 		{
