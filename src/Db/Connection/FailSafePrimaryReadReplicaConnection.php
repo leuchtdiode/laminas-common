@@ -1,14 +1,11 @@
 <?php
 namespace Common\Db\Connection;
 
-use Doctrine\DBAL\Connections\MasterSlaveConnection;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection;
 use Doctrine\DBAL\Driver\Connection;
 use Exception;
 
-/**
- * @deprecated Use Common\Db\Connection\FailSafePrimaryReadReplicaConnection instead
- */
-class FailSafeMasterSlaveConnection extends MasterSlaveConnection
+class FailSafePrimaryReadReplicaConnection extends PrimaryReadReplicaConnection
 {
 	/**
 	 * @param string $connectionName
@@ -19,13 +16,13 @@ class FailSafeMasterSlaveConnection extends MasterSlaveConnection
 	{
 		$params = $this->getParams();
 
-		if ($connectionName === 'master')
+		if ($connectionName === 'primary')
 		{
 			return parent::connectTo($connectionName);
 		}
 
-		$hosts   = $params['slaves'];
-		$hosts[] = $params['master'];
+		$hosts   = $params['replica'];
+		$hosts[] = $params['primary'];
 
 		foreach ($hosts as $dbConfig)
 		{
@@ -44,6 +41,6 @@ class FailSafeMasterSlaveConnection extends MasterSlaveConnection
 			}
 		}
 
-		throw new Exception('Could not connect to any slave or master');
+		throw new Exception('Could not connect to any replica or primary');
 	}
 }
