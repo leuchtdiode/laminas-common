@@ -35,6 +35,7 @@ class EmailOptionalTest extends Base
 			[ 'test@', true, null ],
 			[ 'test@test', true, null ],
 			[ 'test@test.at', false, 'test@test.at' ],
+			[ '   test@test.at   ', false, 'test@test.at' ],
 		];
 	}
 }

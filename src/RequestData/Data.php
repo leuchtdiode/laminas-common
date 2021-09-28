@@ -7,6 +7,7 @@ use Common\RequestData\PropertyDefinition\PropertyDefinition;
 use Common\Translator;
 use Common\Util\StringUtil;
 use Exception;
+use Laminas\Filter\FilterInterface;
 use Laminas\Stdlib\RequestInterface;
 use Psr\Container\ContainerInterface;
 
@@ -100,6 +101,17 @@ abstract class Data
 		{
 			$handledValue = $this->handleValue($definition);
 			$rawValue     = $handledValue['value'];
+
+			if (($filterChain = $definition->getFilterChain()))
+			{
+				/**
+				 * @var FilterInterface $filter
+				 */
+				foreach ($filterChain->getFilters() as $filter)
+				{
+					$rawValue = $filter->filter($rawValue);
+				}
+			}
 
 			$value = new Value();
 			$value->setName($definition->getName());

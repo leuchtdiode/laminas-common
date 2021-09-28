@@ -1,6 +1,8 @@
 <?php
 namespace Common\RequestData\PropertyDefinition;
 
+use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 
@@ -30,6 +32,11 @@ abstract class PropertyDefinition
 	 * @var ValidatorChain|null
 	 */
 	protected $validatorChain;
+
+	/**
+	 * @var FilterChain|null
+	 */
+	protected $filterChain;
 
 	/**
 	 * @var string|null
@@ -64,6 +71,22 @@ abstract class PropertyDefinition
 		}
 
 		$this->validatorChain->attach($validator);
+
+		return $this;
+	}
+
+	/**
+	 * @param FilterInterface $filter
+	 * @return PropertyDefinition
+	 */
+	public function addFilter(FilterInterface $filter): PropertyDefinition
+	{
+		if (!$this->filterChain)
+		{
+			$this->filterChain = new FilterChain();
+		}
+
+		$this->filterChain->attach($filter);
 
 		return $this;
 	}
@@ -146,6 +169,11 @@ abstract class PropertyDefinition
 	public function getValidatorChain(): ?ValidatorChain
 	{
 		return $this->validatorChain;
+	}
+
+	public function getFilterChain(): ?FilterChain
+	{
+		return $this->filterChain;
 	}
 
 	/**

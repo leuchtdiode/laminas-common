@@ -54,10 +54,6 @@
 			"label": "Aruba"
 		},
 		{
-			"isoCode": "AC",
-			"label": "Ascension Island"
-		},
-		{
 			"isoCode": "AU",
 			"label": "Australia"
 		},
@@ -122,6 +118,10 @@
 			"label": "Botswana"
 		},
 		{
+			"isoCode": "BV",
+			"label": "Bouvet Island"
+		},
+		{
 			"isoCode": "BR",
 			"label": "Brazil"
 		},
@@ -162,10 +162,6 @@
 			"label": "Canada"
 		},
 		{
-			"isoCode": "IC",
-			"label": "Canary Islands"
-		},
-		{
 			"isoCode": "CV",
 			"label": "Cape Verde"
 		},
@@ -180,10 +176,6 @@
 		{
 			"isoCode": "CF",
 			"label": "Central African Republic"
-		},
-		{
-			"isoCode": "EA",
-			"label": "Ceuta \u0026 Melilla"
 		},
 		{
 			"isoCode": "TD",
@@ -256,10 +248,6 @@
 		{
 			"isoCode": "DK",
 			"label": "Denmark"
-		},
-		{
-			"isoCode": "DG",
-			"label": "Diego Garcia"
 		},
 		{
 			"isoCode": "DJ",
@@ -406,6 +394,10 @@
 			"label": "Haiti"
 		},
 		{
+			"isoCode": "HM",
+			"label": "Heard & McDonald Islands"
+		},
+		{
 			"isoCode": "HN",
 			"label": "Honduras"
 		},
@@ -480,10 +472,6 @@
 		{
 			"isoCode": "KI",
 			"label": "Kiribati"
-		},
-		{
-			"isoCode": "XK",
-			"label": "Kosovo"
 		},
 		{
 			"isoCode": "KW",
@@ -726,14 +714,6 @@
 			"label": "Portugal"
 		},
 		{
-			"isoCode": "XA",
-			"label": "Pseudo-Accents"
-		},
-		{
-			"isoCode": "XB",
-			"label": "Pseudo-Bidi"
-		},
-		{
 			"isoCode": "PR",
 			"label": "Puerto Rico"
 		},
@@ -924,10 +904,6 @@
 		{
 			"isoCode": "TT",
 			"label": "Trinidad \u0026 Tobago"
-		},
-		{
-			"isoCode": "TA",
-			"label": "Tristan da Cunha"
 		},
 		{
 			"isoCode": "TN",

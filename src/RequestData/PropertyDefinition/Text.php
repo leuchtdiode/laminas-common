@@ -1,13 +1,27 @@
 <?php
 namespace Common\RequestData\PropertyDefinition;
 
+use Common\RequestData\PropertyDefinition\Text\CreateOptions;
+use Laminas\Filter\StringTrim;
+
 class Text extends PropertyDefinition
 {
-	/**
-	 * @return Text
-	 */
-	public static function create()
+	public static function create(?CreateOptions $createOptions = null): Text
 	{
-		return new self();
+		return new self($createOptions);
+	}
+
+	/**
+	 */
+	public function __construct(?CreateOptions $createOptions = null)
+	{
+		parent::__construct();
+
+		if (!$createOptions || $createOptions->isTrim())
+		{
+			$this->addFilter(
+				new StringTrim()
+			);
+		}
 	}
 }

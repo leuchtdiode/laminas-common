@@ -30,12 +30,14 @@ class ProviderTest extends TestCase
 	 */
 	public function test_all()
 	{
-		$all = $country = (new Provider())
+		$all = (new Provider())
 			->all();
 
-		$this->assertCount(255, $all);
+		$first = $all[0];
+
+		$this->assertCount(249, $all);
 		$this->assertEquals('ZW', $all[count($all) - 1]->getIsoCode());
-		$this->assertEquals('AF', reset($all)->getIsoCode());
+		$this->assertEquals('AF', $first->getIsoCode());
 	}
 
 	/**
