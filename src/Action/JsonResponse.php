@@ -24,31 +24,30 @@ class JsonResponse
 	private $data;
 
 	/**
-	 * @return JsonResponse
+	 * @var array|null
 	 */
-	public static function is()
+	private $meta;
+
+	public static function is(): JsonResponse
 	{
-		return new self();
+		return new static();
 	}
 
 	/**
-	 * @return JsonModel
 	 * @throws Exception
 	 */
-	public function dispatch()
+	public function dispatch(): JsonModel
 	{
 		return new JsonModel(
 			[
 				'success' => $this->success,
 				'data'    => $this->data,
+				'meta'    => $this->meta,
 				'errors'  => ObjectToArrayHydrator::hydrate($this->errors),
 			]
 		);
 	}
 
-	/**
-	 * @return JsonResponse
-	 */
 	public function successful(): JsonResponse
 	{
 		$this->success = true;
@@ -56,9 +55,6 @@ class JsonResponse
 		return $this;
 	}
 
-	/**
-	 * @return JsonResponse
-	 */
 	public function unsuccessful(): JsonResponse
 	{
 		$this->success = false;
@@ -68,7 +64,6 @@ class JsonResponse
 
 	/**
 	 * @param Error[] $errors
-	 * @return JsonResponse
 	 */
 	public function errors(array $errors): JsonResponse
 	{
@@ -77,14 +72,16 @@ class JsonResponse
 		return $this;
 	}
 
-	/**
-	 * @param array $data
-	 * @return JsonResponse
-	 */
 	public function data(array $data): JsonResponse
 	{
 		$this->data = $data;
 
+		return $this;
+	}
+
+	public function meta(?array $meta): JsonResponse
+	{
+		$this->meta = $meta;
 		return $this;
 	}
 }
