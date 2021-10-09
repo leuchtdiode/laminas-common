@@ -3,7 +3,10 @@ namespace Common\RequestData\PropertyDefinition\Text;
 
 class CreateOptions
 {
-	private bool $trim = true;
+	/**
+	 * @var bool
+	 */
+	private $trim = true;
 
 	public static function create(): self
 	{
