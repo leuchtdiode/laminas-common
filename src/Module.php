@@ -10,14 +10,11 @@ class Module
 	/**
 	 * @return array
 	 */
-	public function getConfig()
+	public function getConfig(): array
 	{
 		return include __DIR__ . '/../config/module.config.php';
 	}
 
-	/**
-	 * @param MvcEvent $e
-	 */
 	public function onBootstrap(MvcEvent $e)
 	{
 		$eventManager 	= $e->getApplication()->getEventManager();

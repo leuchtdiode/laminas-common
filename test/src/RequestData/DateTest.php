@@ -43,7 +43,7 @@ class DateTest extends Base
 
 class DateTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Date::create()

@@ -5,23 +5,14 @@ use Laminas\View\Helper\AbstractHelper;
 
 class Config extends AbstractHelper
 {
-	/**
-	 * @var array
-	 */
-	private $config;
+	private array $config;
 
-	/**
-	 * @param array $config
-	 */
 	public function __construct(array $config)
 	{
 		$this->config = $config;
 	}
 
-	/**
-	* @return array
-	*/
-	public function __invoke()
+	public function __invoke(): array
 	{
 		return $this->config;
 	}

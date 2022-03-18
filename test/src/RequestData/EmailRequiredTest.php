@@ -42,7 +42,7 @@ class EmailRequiredTest extends Base
 
 class EmailRequiredTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Email::create()

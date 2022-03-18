@@ -10,24 +10,17 @@ use Laminas\View\Model\JsonModel;
 
 class GetList extends BaseJsonAction
 {
-	/**
-	 * @var CountryProvider
-	 */
-	private $countryProvider;
+	private CountryProvider $countryProvider;
 
-	/**
-	 * @param CountryProvider $countryProvider
-	 */
 	public function __construct(CountryProvider $countryProvider)
 	{
 		$this->countryProvider = $countryProvider;
 	}
 
 	/**
-	 * @return JsonModel
 	 * @throws Exception
 	 */
-	public function executeAction()
+	public function executeAction(): JsonModel
 	{
 		return JsonResponse::is()
 			->successful()

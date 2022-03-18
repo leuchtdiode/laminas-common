@@ -6,44 +6,31 @@ use Doctrine\ORM\QueryBuilder;
 
 abstract class YesNo implements Filter
 {
-	/**
-	 * @var boolean
-	 */
-	protected $value;
+	protected bool $value;
 
-	/**
-	 * @return string
-	 */
-	abstract protected function getColumn();
+	abstract protected function getColumn(): string;
 
-	/**
-	 * @param bool $value
-	 */
 	private function __construct(bool $value)
 	{
 		$this->value = $value;
 	}
 
-	/**
-	 * @return static
-	 */
-	public static function yes()
+	public static function yes(): static
 	{
 		return new static(true);
 	}
 
-	/**
-	 * @return static
-	 */
-	public static function no()
+	public static function no(): static
 	{
 		return new static(false);
 	}
 
-	/**
-	 * @param QueryBuilder $queryBuilder
-	 */
-	public function addClause(QueryBuilder $queryBuilder)
+	public static function as(bool $value): static
+	{
+		return new static($value);
+	}
+
+	public function addClause(QueryBuilder $queryBuilder): void
 	{
 		$queryBuilder
 			->andWhere(

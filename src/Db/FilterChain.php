@@ -6,20 +6,13 @@ class FilterChain
 	/**
 	 * @var Filter[]
 	 */
-	private $filters = [];
+	private array $filters = [];
 
-	/**
-	 * @return FilterChain
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
 
-	/**
-	 * @param Filter $filter
-	 * @return FilterChain
-	 */
 	public function addFilter(Filter $filter) : FilterChain
 	{
 		$this->filters[] = $filter;

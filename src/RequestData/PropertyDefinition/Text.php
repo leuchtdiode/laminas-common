@@ -6,7 +6,7 @@ use Laminas\Filter\StringTrim;
 
 class Text extends PropertyDefinition
 {
-	public static function create(?CreateOptions $createOptions = null): Text
+	public static function create(?CreateOptions $createOptions = null): self
 	{
 		return new self($createOptions);
 	}

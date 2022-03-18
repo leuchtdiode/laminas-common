@@ -7,40 +7,30 @@ use Common\RequestData\PropertyDefinition\PropertyDefinition;
 use Common\Translator;
 use Common\Util\StringUtil;
 use Exception;
+use JetBrains\PhpStorm\Pure;
 use Laminas\Filter\FilterInterface;
 use Laminas\Stdlib\RequestInterface;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 abstract class Data
 {
 	/**
 	 * @return PropertyDefinition[]
 	 */
-	abstract protected function getDefinitions();
+	abstract protected function getDefinitions(): array;
 
-	/**
-	 * @var ContainerInterface
-	 */
-	protected $container;
+	protected ContainerInterface $container;
 
-	/**
-	 * @var array
-	 */
-	private $data;
+	private array $data;
 
-	/**
-	 * @param ContainerInterface $container
-	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->container = $container;
 	}
 
-	/**
-	 * @param RequestInterface $request
-	 * @return Data
-	 */
-	public function setRequest(RequestInterface $request)
+	public function setRequest(RequestInterface $request): Data
 	{
 		if ($request->getMethod() === 'GET')
 		{
@@ -64,21 +54,16 @@ abstract class Data
 		return $this;
 	}
 
-	/**
-	 * @param array $data
-	 * @return Data
-	 */
-	public function setData($data)
+	public function setData(array $data): self
 	{
 		$this->data = $data;
 		return $this;
 	}
 
 	/**
-	 * @return Values
 	 * @throws Exception
 	 */
-	public function getValues()
+	public function getValues(): Values
 	{
 		$values = new Values();
 
@@ -91,11 +76,11 @@ abstract class Data
 	}
 
 	/**
-	 * @param Values $values
 	 * @param PropertyDefinition[] $definitions
-	 * @throws Exception
+	 * @throws ContainerExceptionInterface
+	 * @throws NotFoundExceptionInterface
 	 */
-	private function handleDefinitions(Values $values, array $definitions)
+	private function handleDefinitions(Values $values, array $definitions): void
 	{
 		foreach ($definitions as $definition)
 		{
@@ -190,17 +175,11 @@ abstract class Data
 						)
 					);
 				}
-
-				continue;
 			}
 		}
 	}
 
-	/**
-	 * @param PropertyDefinition $definition
-	 * @return array
-	 */
-	private function handleValue(PropertyDefinition $definition)
+	private function handleValue(PropertyDefinition $definition): array
 	{
 		$name = $definition->getName();
 
@@ -245,11 +224,7 @@ abstract class Data
 		];
 	}
 
-	/**
-	 * @param PropertyDefinition $definition
-	 * @return string
-	 */
-	private function getErrorLabel(PropertyDefinition $definition)
+	private function getErrorLabel(PropertyDefinition $definition): string
 	{
 		return ($label = $definition->getLabel())
 			? Translator::translate($label)

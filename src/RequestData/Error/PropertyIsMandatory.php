@@ -2,48 +2,31 @@
 namespace Common\RequestData\Error;
 
 use Common\Error;
+use Common\Hydration\ObjectToArrayHydratorProperty;
 use Common\Translator;
 
 class PropertyIsMandatory extends Error
 {
-	/**
-	 * @var string
-	 */
-	private $name;
+	private string $name;
 
-	/**
-	 * @param string $name
-	 */
 	private function __construct(string $name)
 	{
 		$this->name = $name;
 	}
 
-	/**
-	 * @param $name
-	 * @return PropertyIsMandatory
-	 */
-	public static function create($name)
+	public static function create(string $name): self
 	{
 		return new self($name);
 	}
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @return string
-	 */
-	public function getCode()
+	#[ObjectToArrayHydratorProperty]
+	public function getCode(): string
 	{
 		return 'MANDATORY_PROPERTY_MISSING';
 	}
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @return string
-	 */
-	public function getMessage()
+	#[ObjectToArrayHydratorProperty]
+	public function getMessage(): string
 	{
 		return Translator::translate($this->name . ' darf nicht leer sein');
 	}

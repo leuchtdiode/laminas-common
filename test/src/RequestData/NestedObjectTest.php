@@ -88,7 +88,7 @@ class NestedObjectTest extends CommonBase
 
 class NestedObjectTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		$zipValidator = new StringLength([ 'min' => 4, 'max' => 4 ]);
 

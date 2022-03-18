@@ -6,20 +6,13 @@ class OrderChain
 	/**
 	 * @var Order[]
 	 */
-	private $orders = [];
+	private array $orders = [];
 
-	/**
-	 * @return OrderChain
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
 
-	/**
-	 * @param Order $order
-	 * @return OrderChain
-	 */
 	public function addOrder(Order $order) : OrderChain
 	{
 		$this->orders[] = $order;

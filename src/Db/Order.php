@@ -5,5 +5,5 @@ use Doctrine\ORM\QueryBuilder;
 
 interface Order
 {
-	public function addOrder(QueryBuilder $queryBuilder);
+	public function addOrder(QueryBuilder $queryBuilder): void;
 }

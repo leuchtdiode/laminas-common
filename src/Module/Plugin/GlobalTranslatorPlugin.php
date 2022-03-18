@@ -7,30 +7,17 @@ use Laminas\I18n\Translator\TranslatorInterface;
 
 class GlobalTranslatorPlugin implements Plugin
 {
-	/**
-	 * @var array
-	 */
-	private $config;
+	private array $config;
 
-	/**
-	 * @var TranslatorInterface
-	 */
-	private $translator;
+	private TranslatorInterface $translator;
 
-	/**
-	 * @param array $config
-	 * @param TranslatorInterface $translator
-	 */
 	public function __construct(array $config, TranslatorInterface $translator)
 	{
 		$this->config     = $config;
 		$this->translator = $translator;
 	}
 
-	/**
-	 *
-	 */
-	public function execute()
+	public function execute(): void
 	{
 		if (!$this->config['common']['translator']['global']['enabled'])
 		{

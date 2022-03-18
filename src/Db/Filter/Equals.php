@@ -13,94 +13,54 @@ abstract class Equals implements Filter
 	const IN        = 'in';
 	const NOT_IN    = 'notIn';
 
-	/**
-	 * @var string
-	 */
-	private $type;
+	private string $type;
 
-	/**
-	 * @var mixed|null
-	 */
-	private $parameter;
+	private mixed $parameter = null;
 
-	/**
-	 * @return string
-	 */
-	abstract protected function getField();
+	abstract protected function getField(): string;
 
-	/**
-	 * @return string
-	 */
-	abstract protected function getParameterName();
+	abstract protected function getParameterName(): string;
 
-	/**
-	 * @param $type
-	 * @param mixed $parameter
-	 */
-	private function __construct($type, $parameter = null)
+	private function __construct(string $type, mixed $parameter = null)
 	{
 		$this->type      = $type;
 		$this->parameter = $parameter;
 	}
 
-	/**
-	 * @param mixed $parameter
-	 * @return static
-	 */
-	public static function is($parameter)
+	public static function is(mixed $parameter): static
 	{
 		return new static(self::VALUE, $parameter);
 	}
 
-	/**
-	 * @param mixed $parameter
-	 * @return static
-	 */
-	public static function isNot($parameter)
+	public static function isNot(mixed $parameter): static
 	{
 		return new static(self::NOT_VALUE, $parameter);
 	}
 
-	/**
-	 * @param array $parameter
-	 * @return static
-	 */
-	public static function in(array $parameter)
+	public static function in(array $parameter): static
 	{
 		return new static(self::IN, $parameter);
 	}
 
-	/**
-	 * @param array $parameter
-	 * @return static
-	 */
-	public static function notIn(array $parameter)
+	public static function notIn(array $parameter): static
 	{
 		return new static(self::NOT_IN, $parameter);
 	}
 
-	/**
-	 * @return Equals
-	 */
-	public static function isNull()
+	public static function isNull(): static
 	{
 		return new static(self::NULL);
 	}
 
-	/**
-	 * @return Equals
-	 */
-	public static function isNotNull()
+	public static function isNotNull(): static
 	{
 		return new static(self::NOT_NULL);
 	}
 
-	/**
-	 * @param QueryBuilder $queryBuilder
-	 */
-	public function addClause(QueryBuilder $queryBuilder)
+	public function addClause(QueryBuilder $queryBuilder): void
 	{
-		$parameterName = $this->getParameterName();
+		// uniqid = prevent double param names when using filter more than once
+		$parameterName = uniqid($this->getParameterName());
 
 		switch ($this->type)
 		{

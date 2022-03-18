@@ -5,19 +5,12 @@ use Common\RequestData\Transformer\Boolean as BooleanTransformer;
 
 class Boolean extends PropertyDefinition
 {
-	/**
-	 * @return Boolean
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
 
-	/**
-	 * @param $value
-	 * @return bool
-	 */
-	public function valueIsEmpty($value)
+	public function valueIsEmpty($value): bool
 	{
 		return $value === null;
 	}

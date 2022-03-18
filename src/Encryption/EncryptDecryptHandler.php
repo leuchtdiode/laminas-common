@@ -8,23 +8,15 @@ class EncryptDecryptHandler
 {
 	const ENCRYPT_METHOD = 'AES-256-CBC';
 
-	/**
-	 * @var string
-	 */
-	private $key;
+	private string $key;
 
-	/**
-	 * @var string
-	 */
-	private $iv;
+	private string $iv;
 
 	/**
 	 * @param $text
-	 * @param EncryptDecryptOptions $options
-	 * @return string
 	 * @throws Exception if openssl extension is missing
 	 */
-	public function encrypt($text, EncryptDecryptOptions $options)
+	public function encrypt($text, EncryptDecryptOptions $options): string
 	{
 		$this->prepare($options);
 
@@ -42,10 +34,9 @@ class EncryptDecryptHandler
 	/**
 	 * @param $text
 	 * @param EncryptDecryptOptions $options
-	 * @return string
 	 * @throws Exception if openssl extension is missing
 	 */
-	public function decrypt($text, EncryptDecryptOptions $options)
+	public function decrypt($text, EncryptDecryptOptions $options): string|false
 	{
 		$this->prepare($options);
 
@@ -59,10 +50,9 @@ class EncryptDecryptHandler
 	}
 
 	/**
-	 * @param EncryptDecryptOptions $options
 	 * @throws Exception
 	 */
-	private function prepare(EncryptDecryptOptions $options)
+	private function prepare(EncryptDecryptOptions $options): void
 	{
 		if (!extension_loaded('openssl'))
 		{

@@ -2,44 +2,27 @@
 namespace Common\Country;
 
 use Common\Hydration\ArrayHydratable;
+use Common\Hydration\ObjectToArrayHydratorProperty;
 
 class Country implements ArrayHydratable
 {
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @var string
-	 */
-	private $isoCode;
+	#[ObjectToArrayHydratorProperty]
+	private string $isoCode;
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @var string
-	 */
-	private $label;
+	#[ObjectToArrayHydratorProperty]
+	private string $label;
 
-	/**
-	 * @param string $isoCode
-	 * @param string $label
-	 */
 	public function __construct(string $isoCode, string $label)
 	{
 		$this->isoCode = $isoCode;
 		$this->label   = $label;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getIsoCode(): string
 	{
 		return $this->isoCode;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getLabel(): string
 	{
 		return $this->label;

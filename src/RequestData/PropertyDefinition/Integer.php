@@ -5,19 +5,12 @@ use Laminas\Validator\Digits;
 
 class Integer extends PropertyDefinition
 {
-	/**
-	 * @return Integer
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
 
-	/**
-	 * @param $value
-	 * @return bool
-	 */
-	public function valueIsEmpty($value)
+	public function valueIsEmpty($value): bool
 	{
 		return $value === null;
 	}
@@ -26,6 +19,8 @@ class Integer extends PropertyDefinition
 	 */
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->addValidator(
 			new Digits()
 		);

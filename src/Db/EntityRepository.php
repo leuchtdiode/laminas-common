@@ -8,20 +8,15 @@ use Doctrine\ORM\NoResultException;
 class EntityRepository extends DoctrineEntityRepository
 {
 	/**
-	 * @param FilterChain $filterChain
-	 * @param OrderChain|null $orderChain
-	 * @param int $offset
-	 * @param int $limit
-	 * @param bool $distinct
-	 * @return array
+	 * @return Entity[]
 	 */
 	public function filter(
 		FilterChain $filterChain,
 		OrderChain $orderChain = null,
-		$offset = 0,
-		$limit = PHP_INT_MAX,
+		int $offset = 0,
+		int $limit = PHP_INT_MAX,
 		bool $distinct = false
-	)
+	): array
 	{
 		$queryBuilder = $this->createQueryBuilder('t');
 
@@ -30,12 +25,12 @@ class EntityRepository extends DoctrineEntityRepository
 			$queryBuilder->distinct();
 		}
 
-		foreach($filterChain->getFilters() as $filter)
+		foreach ($filterChain->getFilters() as $filter)
 		{
 			$filter->addClause($queryBuilder);
 		}
 
-		if($orderChain)
+		if ($orderChain)
 		{
 			foreach ($orderChain->getOrders() as $order)
 			{
@@ -52,13 +47,10 @@ class EntityRepository extends DoctrineEntityRepository
 	}
 
 	/**
-	 * @param FilterChain|null $filterChain
-	 * @param bool $distinct
-	 * @return int
 	 * @throws NonUniqueResultException
 	 * @throws NoResultException
 	 */
-	public function countWithFilter(FilterChain $filterChain = null, $distinct = false)
+	public function countWithFilter(FilterChain $filterChain = null, bool $distinct = false): int
 	{
 		$identifiers = $this
 			->getClassMetadata()
@@ -66,11 +58,13 @@ class EntityRepository extends DoctrineEntityRepository
 
 		$queryBuilder = $this
 			->createQueryBuilder('t')
-			->select('COUNT(' . ($distinct ? 'DISTINCT' : '') . ' t.' . $identifiers[0] . ')');
+			->select('COUNT(' . ($distinct
+					? 'DISTINCT'
+					: '') . ' t.' . $identifiers[0] . ')');
 
 		if ($filterChain)
 		{
-			foreach($filterChain->getFilters() as $filter)
+			foreach ($filterChain->getFilters() as $filter)
 			{
 				$filter->addClause($queryBuilder);
 			}

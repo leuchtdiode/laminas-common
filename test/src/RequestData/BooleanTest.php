@@ -44,7 +44,7 @@ class BooleanTest extends Base
 
 class BooleanTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Boolean::create()

@@ -17,28 +17,15 @@ abstract class Date implements Filter
 	const AFTER   = 'after';
 	const MODULO  = 'modulo';
 
-	/**
-	 * @var DateTime
-	 */
-	protected $value;
+	protected DateTime $value;
 
-	/**
-	 * @var string
-	 */
-	protected $mode;
+	protected string $mode;
 
-	/**
-	 * @return string
-	 */
-	abstract protected function getColumn();
+	abstract protected function getColumn(): string;
 
-	/**
-	 * @param DateTime $value
-	 * @param string $mode
-	 */
 	private function __construct(
 		DateTime $value,
-		$mode = self::IN_DAYS
+		string $mode = self::IN_DAYS
 	)
 	{
 		$this->value = $value;
@@ -46,11 +33,9 @@ abstract class Date implements Filter
 	}
 
 	/**
-	 * @param int $days
-	 * @return static
 	 * @throws Exception
 	 */
-	public static function inDays(int $days)
+	public static function inDays(int $days): static
 	{
 		$date = new DateTime();
 		$date->modify(
@@ -66,62 +51,35 @@ abstract class Date implements Filter
 		return new static($date, self::IN_DAYS);
 	}
 
-	/**
-	 * @param DateTime $date
-	 *
-	 * @return static
-	 */
-	public static function is(DateTime $date)
+	public static function is(DateTime $date): static
 	{
 		return new static($date, self::IS);
 	}
 
-	/**
-	 * @param DateTime $date
-	 *
-	 * @return static
-	 */
-	public static function min(DateTime $date)
+	public static function min(DateTime $date): static
 	{
 		return new static($date, self::MIN);
 	}
 
-	/**
-	 * @param DateTime $date
-	 *
-	 * @return static
-	 */
-	public static function max(DateTime $date)
+	public static function max(DateTime $date): static
 	{
 		return new static($date, self::MAX);
 	}
 
-	/**
-	 * @param DateTime $date
-	 *
-	 * @return static
-	 */
-	public static function before(DateTime $date)
+	public static function before(DateTime $date): static
 	{
 		return new static($date, self::BEFORE);
 	}
 
-	/**
-	 * @param DateTime $date
-	 *
-	 * @return static
-	 */
-	public static function after(DateTime $date)
+	public static function after(DateTime $date): static
 	{
 		return new static($date, self::AFTER);
 	}
 
 	/**
-	 * @param int $days
-	 * @return static
 	 * @throws Exception
 	 */
-	public static function modulo(int $days)
+	public static function modulo(int $days): static
 	{
 		$date = new DateTime();
 		$date->modify(
@@ -137,10 +95,7 @@ abstract class Date implements Filter
 		return new static($date, self::MODULO);
 	}
 
-	/**
-	 * @param QueryBuilder $queryBuilder
-	 */
-	public function addClause(QueryBuilder $queryBuilder)
+	public function addClause(QueryBuilder $queryBuilder): void
 	{
 		$exp = $queryBuilder->expr();
 

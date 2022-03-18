@@ -2,32 +2,25 @@
 namespace Common\View\Helper;
 
 use Common\Router\BaseUrlProvider;
+use Common\Util\StringUtil;
 use Exception;
 use Laminas\View\Helper\AbstractHelper;
 
 class AbsoluteUrl extends AbstractHelper
 {
-	/**
-	 * @var BaseUrlProvider
-	 */
-	private $baseUrlProvider;
+	private BaseUrlProvider $baseUrlProvider;
 
-	/**
-	 * @param BaseUrlProvider $baseUrlProvider
-	 */
 	public function __construct(BaseUrlProvider $baseUrlProvider)
 	{
 		$this->baseUrlProvider = $baseUrlProvider;
 	}
 
 	/**
-	* @param string $requestUri
-	* @return string
 	 * @throws Exception
-	*/
-	public function __invoke($requestUri = '')
+	 */
+	public function __invoke(string $requestUri = ''): string
 	{
-		if (strpos($requestUri, '/') === 0)
+		if (StringUtil::startsWith($requestUri, '/'))
 		{
 			$requestUri = substr($requestUri, 1);
 		}

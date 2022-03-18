@@ -47,7 +47,7 @@ class DateTimeTest extends Base
 
 class DateTimeTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			DateTime::create()

@@ -43,7 +43,7 @@ class IntegerTest extends Base
 
 class IntegerTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Integer::create()

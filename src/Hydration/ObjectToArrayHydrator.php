@@ -11,14 +11,12 @@ use ReflectionMethod;
 
 class ObjectToArrayHydrator
 {
-	const OBJECT_TO_ARRAY_HYDRATOR_PROPERTY = '@ObjectToArrayHydratorProperty';
-
 	/**
 	 * @param $arrayOrObject
 	 * @return array
 	 * @throws Exception
 	 */
-	public static function hydrate($arrayOrObject)
+	public static function hydrate($arrayOrObject): array
 	{
 		try
 		{
@@ -44,12 +42,12 @@ class ObjectToArrayHydrator
 	 */
 	private static function hydrateFromObject($object)
 	{
-		if($object instanceof DateTime)
+		if ($object instanceof DateTime)
 		{
 			return $object->format('c');
 		}
 
-		if(!$object instanceof ArrayHydratable)
+		if (!$object instanceof ArrayHydratable)
 		{
 			if (method_exists($object, '__toString'))
 			{
@@ -63,7 +61,7 @@ class ObjectToArrayHydrator
 
 		$asArray = [];
 
-		foreach($reflection->getMethods() as $method)
+		foreach ($reflection->getMethods() as $method)
 		{
 			$methodName = $method->getName();
 
@@ -79,7 +77,7 @@ class ObjectToArrayHydrator
 
 			$value = $method->invoke($object);
 
-			if(is_object($value))
+			if (is_object($value))
 			{
 				if ($value instanceof Collection)
 				{
@@ -90,9 +88,12 @@ class ObjectToArrayHydrator
 					$value = self::hydrateFromObject($value);
 				}
 			}
-			else if(is_array($value))
+			else
 			{
-				$value = self::hydrateFromArray($value);
+				if (is_array($value))
+				{
+					$value = self::hydrateFromArray($value);
+				}
 			}
 
 			$asArray[self::correctMethodName($methodName)] = $value;
@@ -103,16 +104,15 @@ class ObjectToArrayHydrator
 
 	/**
 	 * @param $array
-	 * @return array
 	 * @throws ReflectionException
 	 */
-	private static function hydrateFromArray($array)
+	private static function hydrateFromArray($array): array
 	{
 		$values = [];
 
-		foreach($array as $item)
+		foreach ($array as $item)
 		{
-			if(is_object($item))
+			if (is_object($item))
 			{
 				$values[] = self::hydrateFromObject($item);
 			}
@@ -125,15 +125,11 @@ class ObjectToArrayHydrator
 		return $values;
 	}
 
-	/**
-	 * @param $methodName
-	 * @return string
-	 */
-	private static function correctMethodName($methodName)
+	private static function correctMethodName(string $methodName): string
 	{
 		$firstCharCount = 3;
 
-		if(strpos($methodName, 'is') === 0)
+		if (StringUtil::startsWith($methodName, 'is'))
 		{
 			$firstCharCount = 2;
 		}
@@ -141,31 +137,24 @@ class ObjectToArrayHydrator
 		return lcfirst(substr($methodName, $firstCharCount));
 	}
 
-	/**
-	 * @param $methodName
-	 * @return bool
-	 */
-	private static function methodNameAllowed($methodName)
+	private static function methodNameAllowed($methodName): bool
 	{
-		return strpos($methodName, 'get') === 0 || strpos($methodName, 'is') === 0;
+		return StringUtil::startsWith($methodName, 'get')
+			|| StringUtil::startsWith($methodName, 'is');
 	}
 
-	/**
-	 * @param ReflectionClass $reflectionClass
-	 * @param ReflectionMethod $method
-	 * @return bool
-	 */
-	private static function isAllowedProperty(ReflectionClass $reflectionClass, ReflectionMethod $method)
+	private static function isAllowedProperty(ReflectionClass $reflectionClass, ReflectionMethod $method): bool
 	{
 		try
 		{
-			// check if method has necessary doc comment
-			if (StringUtil::contains($method->getDocComment(), self::OBJECT_TO_ARRAY_HYDRATOR_PROPERTY))
+			if ($method->getAttributes(ObjectToArrayHydratorProperty::class))
 			{
 				return true;
 			}
 
-			$cutPosition = StringUtil::startsWith($method->getName(), 'get') ? 3 : 2;
+			$cutPosition = StringUtil::startsWith($method->getName(), 'get')
+				? 3
+				: 2;
 
 			// if method does not, check if property has doc comment
 			$propertyName = lcfirst(
@@ -174,11 +163,10 @@ class ObjectToArrayHydrator
 
 			$property = $reflectionClass->getProperty($propertyName);
 
-			if ($property && StringUtil::contains($property->getDocComment(), self::OBJECT_TO_ARRAY_HYDRATOR_PROPERTY))
+			if ($property && $property->getAttributes(ObjectToArrayHydratorProperty::class))
 			{
 				return true;
 			}
-
 		}
 		catch (Exception $ex)
 		{

@@ -3,5 +3,5 @@ namespace Common\Module;
 
 interface Plugin
 {
-	public function execute();
+	public function execute(): void;
 }

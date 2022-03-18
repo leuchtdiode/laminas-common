@@ -6,61 +6,36 @@ use Doctrine\ORM\QueryBuilder;
 
 abstract class AscOrDesc implements Order
 {
-	/**
-	 * @var string
-	 */
-	protected $direction;
+	protected string $direction;
 
-	/**
-	 * @param string $direction
-	 */
 	private function __construct(string $direction)
 	{
 		$this->direction = $direction;
 	}
 
-	/**
-	 * @return string
-	 */
-	abstract protected function getField();
+	abstract protected function getField(): string;
 
-	/**
-	 * @param string $direction
-	 * @return AscOrDesc
-	 */
-	public static function withDirection($direction)
+	public static function withDirection(string $direction): static
 	{
 		return new static($direction);
 	}
 
-	/**
-	 * @return AscOrDesc
-	 */
-	public static function asc()
+	public static function asc(): static
 	{
 		return new static('ASC');
 	}
 
-	/**
-	 * @return AscOrDesc
-	 */
-	public static function desc()
+	public static function desc(): static
 	{
 		return new static('DESC');
 	}
 
-	/**
-	 * @return string
-	 */
 	protected function getDirection(): string
 	{
 		return $this->direction;
 	}
 
-	/**
-	 * @param QueryBuilder $queryBuilder
-	 */
-	public function addOrder(QueryBuilder $queryBuilder)
+	public function addOrder(QueryBuilder $queryBuilder): void
 	{
 		$queryBuilder->addOrderBy(
 			$this->getField(),

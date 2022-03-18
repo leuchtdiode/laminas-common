@@ -8,21 +8,17 @@ class Values
 	/**
 	 * @var Value[]
 	 */
-	private $values = [];
+	private array $values = [];
 
 	/**
 	 * @param Value $value
 	 */
-	public function addValue(Value $value)
+	public function addValue(Value $value): void
 	{
 		$this->values[] = $value;
 	}
 
-	/**
-	 * @param string $name
-	 * @return Value|null
-	 */
-	public function get($name)
+	public function get(string $name): ?Value
 	{
 		foreach ($this->values as $value)
 		{
@@ -35,36 +31,24 @@ class Values
 		return null;
 	}
 
-	/**
-	 * @param string $name
-	 * @return mixed|null
-	 */
-	public function getRawValue($name)
+	public function getRawValue(string $name): mixed
 	{
 		$value = $this->get($name);
 
-		return $value
-			? $value->getValue()
-			: null;
+		return $value?->getValue();
 	}
 
-	/**
-	 * @param string $name
-	 * @return bool
-	 */
-	public function valueIsPresent($name)
+	public function valueIsPresent(string $name): bool
 	{
 		$value = $this->get($name);
 
-		return $value
-			? $value->isPresent()
-			: false;
+		return $value && $value->isPresent();
 	}
 
 	/**
 	 * @return Error[]
 	 */
-	public function getErrors()
+	public function getErrors(): array
 	{
 		$errors = [];
 
@@ -76,10 +60,7 @@ class Values
 		return $errors;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function hasErrors()
+	public function hasErrors(): bool
 	{
 		return !empty($this->getErrors());
 	}

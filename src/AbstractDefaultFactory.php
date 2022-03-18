@@ -2,30 +2,27 @@
 namespace Common;
 
 use Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
+use ReflectionException;
 
 abstract class AbstractDefaultFactory implements AbstractFactoryInterface
 {
-	/**
-	 * @var ContainerInterface
-	 */
-	private $container;
+	private ContainerInterface $container;
 
-	/**
-	 * @var string
-	 */
-	private $requestedName;
+	private string $requestedName;
 
 	abstract protected function getNamespace();
 
 	public function canCreate(
 		ContainerInterface $container,
 		$requestedName
-	)
+	): bool
 	{
-		return strpos($requestedName, $this->getNamespace() . '\\') === 0;
+		return str_starts_with($requestedName, $this->getNamespace() . '\\');
 	}
 
 	public function __invoke(
@@ -59,34 +56,41 @@ abstract class AbstractDefaultFactory implements AbstractFactoryInterface
 		return new $requestedName;
 	}
 
-	private function tryToLoadWithReflection()
+	/**
+	 * @throws NotFoundExceptionInterface
+	 * @throws ContainerExceptionInterface
+	 * @throws ReflectionException
+	 */
+	private function tryToLoadWithReflection(): ?object
 	{
 		$class = new ReflectionClass($this->requestedName);
 
 		if(!($constructor = $class->getConstructor()))
 		{
-			return;
+			return null;
 		}
 
 		if(!($params = $constructor->getParameters()))
 		{
-			return;
+			return null;
 		}
 
 		$parameterInstances = [];
 
 		foreach($params as $p)
 		{
+			$type = $p->getType();
+
 			if($p->getName() === 'container')
 			{
 				$parameterInstances[] = $this->container;
 			}
-			else if($p->getClass())
+			else if($type && !$type->isBuiltin())
 			{
 				try
 				{
 					$parameterInstances[] = $this->container->get(
-						$p->getClass()->getName()
+						$type->getName()
 					);
 				}
 				catch (Exception $ex)
@@ -96,7 +100,7 @@ abstract class AbstractDefaultFactory implements AbstractFactoryInterface
 					throw $ex;
 				}
 			}
-			else if($p->isArray() && $p->getName() === 'config')
+			else if($type && $type->getName() === 'array' && $p->getName() === 'config')
 			{
 				$parameterInstances[] = $this->container->get('Config');
 			}

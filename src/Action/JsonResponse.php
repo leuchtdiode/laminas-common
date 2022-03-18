@@ -8,27 +8,18 @@ use Laminas\View\Model\JsonModel;
 
 class JsonResponse
 {
-	/**
-	 * @var bool
-	 */
-	private $success;
+	private bool $success;
 
 	/**
 	 * @var Error[]
 	 */
-	private $errors = [];
+	private array $errors = [];
 
-	/**
-	 * @var array
-	 */
-	private $data;
+	private ?array $data = null;
 
-	/**
-	 * @var array|null
-	 */
-	private $meta;
+	private ?Meta $meta = null;
 
-	public static function is(): JsonResponse
+	public static function is(): static
 	{
 		return new static();
 	}
@@ -42,7 +33,9 @@ class JsonResponse
 			[
 				'success' => $this->success,
 				'data'    => $this->data,
-				'meta'    => $this->meta,
+				'meta'    => $this->meta
+					? ObjectToArrayHydrator::hydrate($this->meta)
+					: null,
 				'errors'  => ObjectToArrayHydrator::hydrate($this->errors),
 			]
 		);
@@ -79,7 +72,7 @@ class JsonResponse
 		return $this;
 	}
 
-	public function meta(?array $meta): JsonResponse
+	public function meta(?Meta $meta): JsonResponse
 	{
 		$this->meta = $meta;
 		return $this;

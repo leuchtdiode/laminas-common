@@ -134,7 +134,7 @@ class PresentData extends Data
 	/**
 	 * @inheritDoc
 	 */
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Text::create()
@@ -149,7 +149,7 @@ class PresentNestedData extends Data
 	/**
 	 * @inheritDoc
 	 */
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Text::create()

@@ -5,5 +5,5 @@ use Doctrine\ORM\QueryBuilder;
 
 interface Filter
 {
-	public function addClause(QueryBuilder $queryBuilder);
+	public function addClause(QueryBuilder $queryBuilder): void;
 }

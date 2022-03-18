@@ -4,7 +4,7 @@ namespace CommonTest\RequestData;
 use Common\RequestData\Data;
 use Common\RequestData\PropertyDefinition\Uuid as UuidPropertyDefinition;
 
-class Uuid extends Base
+class UuidTest extends Base
 {
 	/**
 	 * @return string
@@ -40,7 +40,7 @@ class Uuid extends Base
 
 class UuidTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			UuidPropertyDefinition::create()

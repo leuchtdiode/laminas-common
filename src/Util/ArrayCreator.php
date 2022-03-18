@@ -3,25 +3,14 @@ namespace Common\Util;
 
 class ArrayCreator
 {
-	/**
-	 * @var array
-	 */
-	private $array = [];
+	private array $array = [];
 
-	/**
-	 * @return ArrayCreator
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
 
-	/**
-	 * @param mixed $value
-	 * @param string|null $key
-	 * @return ArrayCreator
-	 */
-	public function addIfNotEmpty($value, ?string $key = null)
+	public function addIfNotEmpty(mixed $value, ?string $key = null): self
 	{
 		if (empty($value))
 		{
@@ -31,12 +20,7 @@ class ArrayCreator
 		return $this->add($value, $key);
 	}
 
-	/**
-	 * @param mixed $value
-	 * @param string|null $key
-	 * @return ArrayCreator
-	 */
-	public function addIfNotNull($value, ?string $key = null)
+	public function addIfNotNull(mixed $value, ?string $key = null): self
 	{
 		if ($value === null)
 		{
@@ -46,12 +30,7 @@ class ArrayCreator
 		return $this->add($value, $key);
 	}
 
-	/**
-	 * @param mixed $value
-	 * @param string|null $key
-	 * @return ArrayCreator
-	 */
-	public function add($value, ?string $key = null)
+	public function add(mixed $value, ?string $key = null): self
 	{
 		if ($key !== null)
 		{
@@ -65,11 +44,13 @@ class ArrayCreator
 		return $this;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getArray()
+	public function getArray(): array
 	{
 		return $this->array;
+	}
+
+	public function getJoined(string $delimiter): string
+	{
+		return implode($delimiter, $this->array);
 	}
 }

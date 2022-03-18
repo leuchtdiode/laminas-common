@@ -3,9 +3,5 @@ namespace Common\RequestData;
 
 interface Transformer
 {
-	/**
-	 * @param mixed $value
-	 * @return mixed
-	 */
-	public function transform($value);
+	public function transform(mixed $value): mixed;
 }

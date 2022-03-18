@@ -42,7 +42,7 @@ class EmailOptionalTest extends Base
 
 class EmailOptionalTestData extends Data
 {
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Email::create()

@@ -15,30 +15,16 @@ abstract class Generic implements Filter
 	const STARTS_WITH = 'starts_with';
 	const ENDS_WITH   = 'ends_with';
 
-	/**
-	 * @var boolean
-	 */
-	private $value;
+	private string $value;
 
-	/**
-	 * @return array
-	 */
 	abstract protected function getColumns(): array;
 
-	/**
-	 * @param bool $value
-	 */
-	private function __construct($value)
+	private function __construct(string $value)
 	{
 		$this->value = $value;
 	}
 
-	/**
-	 * @param $value
-	 *
-	 * @return static
-	 */
-	public static function search($value): self
+	public static function search(string $value): static
 	{
 		return new static($value);
 	}
@@ -46,7 +32,7 @@ abstract class Generic implements Filter
 	/**
 	 * @param QueryBuilder $queryBuilder
 	 */
-	public function addClause(QueryBuilder $queryBuilder)
+	public function addClause(QueryBuilder $queryBuilder): void
 	{
 		$exp = $queryBuilder->expr();
 
@@ -62,12 +48,6 @@ abstract class Generic implements Filter
 		$queryBuilder->andWhere(new Andx($conditions));
 	}
 
-	/**
-	 * @param Expr $exp
-	 * @param string $value
-	 *
-	 * @return Orx
-	 */
 	private function getCondition(
 		Expr $exp,
 		string $value

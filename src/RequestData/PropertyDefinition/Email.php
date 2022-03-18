@@ -6,10 +6,7 @@ use Laminas\Validator\EmailAddress;
 
 class Email extends PropertyDefinition
 {
-	/**
-	 * @return Email
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}

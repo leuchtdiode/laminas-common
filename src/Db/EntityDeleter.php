@@ -6,25 +6,17 @@ use Exception;
 
 class EntityDeleter
 {
-	/**
-	 * @var EntityManager
-	 */
-	protected $entityManager;
+	protected EntityManager $entityManager;
 
-	/**
-	 * @param EntityManager $entityManager
-	 */
 	public function __construct(EntityManager $entityManager)
 	{
 		$this->entityManager = $entityManager;
 	}
 
 	/**
-	 * @param $entity
-	 * @param bool $flush
 	 * @throws Exception
 	 */
-	public function delete($entity, $flush = true)
+	public function delete(Entity $entity, bool $flush = true)
 	{
 		$this->entityManager->remove($entity);
 		

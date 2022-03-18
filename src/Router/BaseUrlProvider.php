@@ -5,24 +5,17 @@ use Exception;
 
 class BaseUrlProvider
 {
-	/**
-	 * @var array
-	 */
-	private $config;
+	private array $config;
 
-	/**
-	 * @param array $config
-	 */
 	public function __construct(array $config)
 	{
 		$this->config = $config;
 	}
 
 	/**
-	 * @return string
 	 * @throws Exception
 	 */
-	public function get()
+	public function get(): string
 	{
 		$config = $this->config['common']['url'] ?? null;
 

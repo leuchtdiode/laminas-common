@@ -7,24 +7,14 @@ class StaticResource extends AbstractHelper
 {
 	const NAME = 'staticResource';
 
-	/**
-	 * @var string
-	 */
-	private $basePath;
+	private string $basePath;
 
-	/**
-	 * @param string $basePath
-	 */
-	public function __construct($basePath)
+	public function __construct(string $basePath)
 	{
 		$this->basePath = $basePath;
 	}
 
-	/**
-	 * @param string $resource
-	 * @return string
-	 */
-	public function __invoke($resource)
+	public function __invoke($resource): string
 	{
 		$file = $this->basePath . DIRECTORY_SEPARATOR . $resource;
 

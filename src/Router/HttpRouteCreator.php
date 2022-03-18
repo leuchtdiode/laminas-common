@@ -7,48 +7,23 @@ use Laminas\Router\Http\Segment;
 
 class HttpRouteCreator
 {
-	/**
-	 * @var string
-	 */
-	private $route;
+	private ?string $route = null;
 
-	/**
-	 * @var string
-	 */
-	private $action;
+	private ?string $action = null;
 
-	/**
-	 * @var bool
-	 */
-	private $mayTerminate = true;
+	private bool $mayTerminate = true;
 
-	/**
-	 * @var array
-	 */
-	private $constraints;
+	private ?array $constraints = null;
 
-	/**
-	 * @var array
-	 */
-	private $childRoutes;
+	private ?array $childRoutes = null;
 
-	/**
-	 * @var array
-	 */
-	private $methods = [];
+	private array $methods = [];
 
-	/**
-	 * @return HttpRouteCreator
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
 
-	/**
-	 * @param string $route
-	 * @return HttpRouteCreator
-	 */
 	public function setRoute(string $route): HttpRouteCreator
 	{
 		$this->route = $route;
@@ -56,10 +31,6 @@ class HttpRouteCreator
 		return $this;
 	}
 
-	/**
-	 * @param string $action
-	 * @return HttpRouteCreator
-	 */
 	public function setAction(string $action): HttpRouteCreator
 	{
 		$this->action = $action;
@@ -67,10 +38,6 @@ class HttpRouteCreator
 		return $this;
 	}
 
-	/**
-	 * @param bool $mayTerminate
-	 * @return HttpRouteCreator
-	 */
 	public function setMayTerminate(bool $mayTerminate): HttpRouteCreator
 	{
 		$this->mayTerminate = $mayTerminate;
@@ -78,10 +45,6 @@ class HttpRouteCreator
 		return $this;
 	}
 
-	/**
-	 * @param array $constraints
-	 * @return HttpRouteCreator
-	 */
 	public function setConstraints(array $constraints): HttpRouteCreator
 	{
 		$this->constraints = $constraints;
@@ -89,10 +52,6 @@ class HttpRouteCreator
 		return $this;
 	}
 
-	/**
-	 * @param array $childRoutes
-	 * @return HttpRouteCreator
-	 */
 	public function setChildRoutes(array $childRoutes): HttpRouteCreator
 	{
 		$this->childRoutes = $childRoutes;
@@ -100,10 +59,6 @@ class HttpRouteCreator
 		return $this;
 	}
 
-	/**
-	 * @param array $methods
-	 * @return HttpRouteCreator
-	 */
 	public function setMethods(array $methods): HttpRouteCreator
 	{
 		$this->methods = $methods;
@@ -111,10 +66,7 @@ class HttpRouteCreator
 		return $this;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getConfig()
+	public function getConfig(): array
 	{
 		$type = Literal::class;
 
@@ -129,18 +81,18 @@ class HttpRouteCreator
 		}
 
 		return [
-			'type'			=> $type,
-			'may_terminate'	=> $this->mayTerminate,
-			'options'	=> [
-				'route'		=> $this->route,
-				'verb'		=> implode(',', $this->methods),
-				'defaults'	=> [
-					'controller'	=> $this->action,
-					'action'		=> 'execute',
+			'type'          => $type,
+			'may_terminate' => $this->mayTerminate,
+			'options'       => [
+				'route'       => $this->route,
+				'verb'        => implode(',', $this->methods),
+				'defaults'    => [
+					'controller' => $this->action,
+					'action'     => 'execute',
 				],
-				'constraints'		=> $this->constraints,
+				'constraints' => $this->constraints,
 			],
-			'child_routes'	=> $this->childRoutes
+			'child_routes'  => $this->childRoutes,
 		];
 	}
 }

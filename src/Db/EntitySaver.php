@@ -6,25 +6,14 @@ use Exception;
 
 class EntitySaver
 {
-	/**
-	 * @var EntityManager
-	 */
-	protected $entityManager;
+	protected EntityManager $entityManager;
 
-	/**
-	 * @param EntityManager $entityManager
-	 */
 	public function __construct(EntityManager $entityManager)
 	{
 		$this->entityManager = $entityManager;
 	}
 
-	/**
-	 * @param $entity
-	 * @param bool $flush
-	 * @throws Exception
-	 */
-	public function save($entity, $flush = true)
+	public function save(Entity $entity, bool $flush = true): void
 	{
 		$this->entityManager->persist($entity);
 

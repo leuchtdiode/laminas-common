@@ -1,12 +1,11 @@
 <?php
 namespace Common\RequestData\PropertyDefinition\Text;
 
+use JetBrains\PhpStorm\Pure;
+
 class CreateOptions
 {
-	/**
-	 * @var bool
-	 */
-	private $trim = true;
+	private bool $trim = true;
 
 	public static function create(): self
 	{

@@ -10,7 +10,7 @@ class Provider
 	 * @return Country[]
 	 * @throws Exception
 	 */
-	public function all()
+	public function all(): array
 	{
 		$filePath = sprintf(
 			'vendor/umpirsky/country-list/data/%s/country.php',
@@ -35,11 +35,9 @@ class Provider
 	}
 
 	/**
-	 * @param $isoCode
-	 * @return Country
 	 * @throws Exception
 	 */
-	public function byIsoCode($isoCode)
+	public function byIsoCode($isoCode): Country
 	{
 		$isoCode = strtoupper($isoCode);
 

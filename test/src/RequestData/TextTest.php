@@ -68,7 +68,7 @@ class TextTestData extends Data
 		$this->trim = $trim;
 	}
 
-	protected function getDefinitions()
+	protected function getDefinitions(): array
 	{
 		return [
 			Text::create(

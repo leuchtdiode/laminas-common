@@ -2,29 +2,21 @@
 namespace Common;
 
 use Common\Hydration\ArrayHydratable;
+use Common\Hydration\ObjectToArrayHydratorProperty;
 
 abstract class Error implements ArrayHydratable
 {
+	#[ObjectToArrayHydratorProperty]
 	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
 	 * @var Error[]
 	 */
-	private $subErrors = [];
+	private array $subErrors = [];
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @return string
-	 */
-	abstract public function getCode();
+	#[ObjectToArrayHydratorProperty]
+	abstract public function getCode(): string;
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @return string
-	 */
-	abstract public function getMessage();
+	#[ObjectToArrayHydratorProperty]
+	abstract public function getMessage(): string;
 
 	/**
 	 * @return Error[]
@@ -37,7 +29,7 @@ abstract class Error implements ArrayHydratable
 	/**
 	 * @param Error $error
 	 */
-	public function addSubError(Error $error)
+	public function addSubError(Error $error): void
 	{
 		$this->subErrors[] = $error;
 	}

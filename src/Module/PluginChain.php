@@ -6,31 +6,21 @@ class PluginChain
 	/**
 	 * @var Plugin[]
 	 */
-	private $plugins;
+	private array $plugins = [];
 
-	/**
-	 * @return PluginChain
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
 
-	/**
-	 * @param Plugin $plugin
-	 * @return $this
-	 */
-	public function addPlugin(Plugin $plugin)
+	public function addPlugin(Plugin $plugin): self
 	{
 		$this->plugins[] = $plugin;
 
 		return $this;
 	}
 
-	/**
-	 *
-	 */
-	public function executeAll()
+	public function executeAll(): void
 	{
 		foreach ($this->plugins as $plugin)
 		{

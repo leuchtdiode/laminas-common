@@ -6,6 +6,12 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class StaticResourceFactory implements FactoryInterface
 {
+	/**
+	 * @param ContainerInterface $container
+	 * @param string $requestedName
+	 * @param array|null $options
+	 * @return StaticResource
+	 */
 	public function __invoke(
 		ContainerInterface $container,
 		$requestedName,

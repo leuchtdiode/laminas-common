@@ -5,25 +5,9 @@ use Doctrine\ORM\EntityManager;
 
 class EntityFilterDeleter
 {
-	/**
-	 * @var EntityManager
-	 */
-	protected $entityManager;
+	protected EntityManager $entityManager;
 
-	/**
-	 * @param EntityManager $entityManager
-	 */
-	public function __construct(EntityManager $entityManager)
-	{
-		$this->entityManager = $entityManager;
-	}
-
-	/**
-	 * @param string $entityClass
-	 * @param FilterChain $filterChain
-	 * @return int
-	 */
-	public function filterDelete($entityClass, FilterChain $filterChain)
+	public function filterDelete(string $entityClass, FilterChain $filterChain): int
 	{
 		$queryBuilder = $this->entityManager
 			->getRepository($entityClass)

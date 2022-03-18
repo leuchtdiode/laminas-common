@@ -9,14 +9,8 @@ class Validator extends AbstractValidator
 {
 	const INVALID = 'invalid';
 
-	/**
-	 * @var Provider
-	 */
-	private $countryProvider;
+	private Provider $countryProvider;
 
-	/**
-	 * @param Provider $countryProvider
-	 */
 	public function __construct(Provider $countryProvider)
 	{
 		$this->countryProvider = $countryProvider;
@@ -30,11 +24,7 @@ class Validator extends AbstractValidator
 		);
 	}
 
-	/**
-	 * @param string $value
-	 * @return bool
-	 */
-	public function isValid($value)
+	public function isValid($value): bool
 	{
 		$this->setValue($value);
 

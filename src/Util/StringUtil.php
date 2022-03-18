@@ -3,14 +3,14 @@ namespace Common\Util;
 
 class StringUtil
 {
-	/**
-	 * @param $string
-	 * @param $searchString
-	 * @return bool
-	 */
-	public static function contains($string, $searchString)
+	public static function contains($string, $searchString): bool
 	{
-		return strpos($string, $searchString) !== false;
+		return str_contains($string, $searchString);
+	}
+
+	public static function startsWith($string, $searchString): bool
+	{
+		return str_starts_with($string, $searchString);
 	}
 
 	/**
@@ -18,17 +18,7 @@ class StringUtil
 	 * @param $searchString
 	 * @return bool
 	 */
-	public static function startsWith($string, $searchString)
-	{
-		return strpos($string, $searchString) === 0;
-	}
-
-	/**
-	 * @param $string
-	 * @param $searchString
-	 * @return bool
-	 */
-	public static function endsWith($string, $searchString)
+	public static function endsWith($string, $searchString): bool
 	{
 		$length = strlen($searchString);
 
@@ -40,7 +30,7 @@ class StringUtil
 	 * @param string $b
 	 * @return int
 	 */
-	public static function compare($a, $b)
+	public static function compare($a, $b): int
 	{
 		return strcasecmp($a, $b);
 	}

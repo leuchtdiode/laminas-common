@@ -3,10 +3,7 @@ namespace Common\Util;
 
 class IpUtil
 {
-	/**
-	 * @return string|null
-	 */
-	public static function getIp()
+	public static function getIp(): ?string
 	{
 		$ip = null;
 

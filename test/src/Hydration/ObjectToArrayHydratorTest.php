@@ -1,10 +1,12 @@
 <?php
 namespace CommonTest\Hydration;
 
-use Exception;
 use Common\Hydration\ArrayHydratable;
 use Common\Hydration\ObjectToArrayHydrator;
+use Common\Hydration\ObjectToArrayHydratorProperty;
 use CommonTest\Base;
+use DateTime;
+use Exception;
 
 class ObjectToArrayHydratorTest extends Base
 {
@@ -16,14 +18,16 @@ class ObjectToArrayHydratorTest extends Base
 		$user = new User(
 			1,
 			'Alex',
+			$dateTime = new DateTime('2022-03-18 22:00:05'),
 			new Address('1010', true)
 		);
 
 		$this->assertEquals(
 			[
-				'id'      => 1,
-				'name'    => 'Alex',
-				'address' => [
+				'id'           => 1,
+				'name'         => 'Alex',
+				'creationDate' => $dateTime->format('c'),
+				'address'      => [
 					'zip'     => '1010',
 					'default' => true,
 				],
@@ -35,37 +39,24 @@ class ObjectToArrayHydratorTest extends Base
 
 class User implements ArrayHydratable
 {
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @var int
-	 */
-	private $id;
+	#[ObjectToArrayHydratorProperty]
+	private int $id;
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @var string
-	 */
-	private $name;
+	#[ObjectToArrayHydratorProperty]
+	private string $name;
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @var Address
-	 */
-	private $address;
+	#[ObjectToArrayHydratorProperty]
+	private DateTime $creationDate;
 
-	/**
-	 * @param int $id
-	 * @param string $name
-	 * @param Address $address
-	 */
-	public function __construct(int $id, string $name, Address $address)
+	#[ObjectToArrayHydratorProperty]
+	private Address $address;
+
+	public function __construct(int $id, string $name, DateTime $creationDate, Address $address)
 	{
-		$this->id      = $id;
-		$this->name    = $name;
-		$this->address = $address;
+		$this->id           = $id;
+		$this->name         = $name;
+		$this->creationDate = $creationDate;
+		$this->address      = $address;
 	}
 
 	/**
@@ -84,6 +75,11 @@ class User implements ArrayHydratable
 		return $this->name;
 	}
 
+	public function getCreationDate(): DateTime
+	{
+		return $this->creationDate;
+	}
+
 	/**
 	 * @return Address
 	 */
@@ -95,15 +91,9 @@ class User implements ArrayHydratable
 
 class Address implements ArrayHydratable
 {
-	/**
-	 * @var string
-	 */
-	private $zip;
+	private string $zip;
 
-	/**
-	 * @var bool
-	 */
-	private $default;
+	private bool $default;
 
 	/**
 	 * @param string $zip
@@ -115,21 +105,13 @@ class Address implements ArrayHydratable
 		$this->default = $default;
 	}
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @return string
-	 */
+	#[ObjectToArrayHydratorProperty]
 	public function getZip(): string
 	{
 		return $this->zip;
 	}
 
-	/**
-	 * @ObjectToArrayHydratorProperty
-	 *
-	 * @return bool
-	 */
+	#[ObjectToArrayHydratorProperty]
 	public function isDefault(): bool
 	{
 		return $this->default;

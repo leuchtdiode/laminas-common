@@ -8,40 +8,22 @@ use Laminas\Validator\ValidatorInterface;
 
 abstract class PropertyDefinition
 {
-	/**
-	 * @var string
-	 */
-	protected $name;
+	protected string $name;
 
 	/**
 	 * @var string|null
 	 */
-	protected $label;
+	protected ?string $label = null;
 
-	/**
-	 * @var mixed|null
-	 */
-	protected $defaultValue;
+	protected mixed $defaultValue = null;
 
-	/**
-	 * @var boolean
-	 */
-	protected $required;
+	protected bool $required;
 
-	/**
-	 * @var ValidatorChain|null
-	 */
-	protected $validatorChain;
+	protected ?ValidatorChain $validatorChain = null;
 
-	/**
-	 * @var FilterChain|null
-	 */
-	protected $filterChain;
+	protected ?FilterChain $filterChain = null;
 
-	/**
-	 * @var string|null
-	 */
-	protected $transformer;
+	protected ?string $transformer = null;
 
 	/**
 	 */
@@ -50,20 +32,12 @@ abstract class PropertyDefinition
 		$this->validatorChain = new ValidatorChain();
 	}
 
-	/**
-	 * @param $value
-	 * @return bool
-	 */
-	public function valueIsEmpty($value)
+	public function valueIsEmpty($value): bool
 	{
 		return empty($value);
 	}
 
-	/**
-	 * @param ValidatorInterface $validator
-	 * @return PropertyDefinition
-	 */
-	public function addValidator(ValidatorInterface $validator)
+	public function addValidator(ValidatorInterface $validator): self
 	{
 		if (!$this->validatorChain)
 		{
@@ -75,10 +49,6 @@ abstract class PropertyDefinition
 		return $this;
 	}
 
-	/**
-	 * @param FilterInterface $filter
-	 * @return PropertyDefinition
-	 */
 	public function addFilter(FilterInterface $filter): PropertyDefinition
 	{
 		if (!$this->filterChain)
@@ -91,81 +61,50 @@ abstract class PropertyDefinition
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getName(): string
 	{
 		return $this->name;
 	}
 
-	/**
-	 * @param string $name
-	 * @return PropertyDefinition
-	 */
 	public function setName(string $name): PropertyDefinition
 	{
 		$this->name = $name;
 		return $this;
 	}
 
-	/**
-	 * @return null|string
-	 */
 	public function getLabel(): ?string
 	{
 		return $this->label;
 	}
 
-	/**
-	 * @param null|string $label
-	 * @return PropertyDefinition
-	 */
 	public function setLabel(?string $label): PropertyDefinition
 	{
 		$this->label = $label;
 		return $this;
 	}
 
-	/**
-	 * @return mixed|null
-	 */
-	public function getDefaultValue()
+	public function getDefaultValue(): mixed
 	{
 		return $this->defaultValue;
 	}
 
-	/**
-	 * @param mixed|null $defaultValue
-	 * @return PropertyDefinition
-	 */
-	public function setDefaultValue($defaultValue): PropertyDefinition
+	public function setDefaultValue(mixed $defaultValue): PropertyDefinition
 	{
 		$this->defaultValue = $defaultValue;
 		return $this;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isRequired(): bool
 	{
 		return $this->required;
 	}
 
-	/**
-	 * @param bool $required
-	 * @return PropertyDefinition
-	 */
 	public function setRequired(bool $required): PropertyDefinition
 	{
 		$this->required = $required;
 		return $this;
 	}
 
-	/**
-	 * @return null|ValidatorChain
-	 */
 	public function getValidatorChain(): ?ValidatorChain
 	{
 		return $this->validatorChain;
@@ -176,18 +115,11 @@ abstract class PropertyDefinition
 		return $this->filterChain;
 	}
 
-	/**
-	 * @return null|string
-	 */
 	public function getTransformer(): ?string
 	{
 		return $this->transformer;
 	}
 
-	/**
-	 * @param null|string $transformer
-	 * @return PropertyDefinition
-	 */
 	public function setTransformer(?string $transformer): PropertyDefinition
 	{
 		$this->transformer = $transformer;

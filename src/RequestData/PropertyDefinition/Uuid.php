@@ -5,10 +5,7 @@ use Laminas\Validator\Uuid as UuidValidator;
 
 class Uuid extends PropertyDefinition
 {
-	/**
-	 * @return Uuid
-	 */
-	public static function create()
+	public static function create(): self
 	{
 		return new self();
 	}
@@ -17,6 +14,8 @@ class Uuid extends PropertyDefinition
 	 */
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->addValidator(
 			new UuidValidator()
 		);

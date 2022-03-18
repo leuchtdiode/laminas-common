@@ -7,11 +7,9 @@ use Exception;
 class AustrianHolidayChecker
 {
 	/**
-	 * @param DateTime $dateTime
-	 * @return bool
 	 * @throws Exception
 	 */
-	public function isHoliday(DateTime $dateTime)
+	public function isHoliday(DateTime $dateTime): bool
 	{
 		if (!extension_loaded('calendar'))
 		{

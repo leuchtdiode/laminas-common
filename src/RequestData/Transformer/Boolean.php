@@ -7,11 +7,9 @@ use Common\RequestData\Transformer;
 class Boolean implements Transformer
 {
 	/**
-	 * @param mixed $value
-	 * @return bool|null
 	 * @throws Exception
 	 */
-	public function transform($value)
+	public function transform(mixed $value): bool
 	{
 		if ($value === '0' || $value === 0 || $value === 'false' || $value === false)
 		{

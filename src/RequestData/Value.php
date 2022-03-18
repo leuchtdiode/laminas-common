@@ -5,87 +5,56 @@ use Common\Error;
 
 class Value
 {
-	/**
-	 * @var string
-	 */
-	private $name;
+	private string $name;
 
-	/**
-	 * @var mixed|null
-	 */
-	private $value;
+	private mixed $value = null;
 
-	/**
-	 * @var bool
-	 */
-	private $present = false;
+	private bool $present = false;
 
 	/**
 	 * @var Error[]
 	 */
-	private $errors = [];
+	private array $errors = [];
 
 	/**
 	 * @param Error $error
 	 */
-	public function addError(Error $error)
+	public function addError(Error $error): void
 	{
 		$this->errors[] = $error;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function hasErrors()
+	public function hasErrors(): bool
 	{
 		return !empty($this->errors);
 	}
 
-	/**
-	 * @param string $name
-	 * @return Value
-	 */
 	public function setName(string $name): Value
 	{
 		$this->name = $name;
 		return $this;
 	}
 
-	/**
-	 * @param mixed|null $value
-	 */
-	public function setValue($value): void
+	public function setValue(mixed $value): void
 	{
 		$this->value = $value;
 	}
 
-	/**
-	 * @param bool $present
-	 */
 	public function setPresent(bool $present): void
 	{
 		$this->present = $present;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getName(): string
 	{
 		return $this->name;
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getValue()
+	public function getValue(): mixed
 	{
 		return $this->value;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isPresent(): bool
 	{
 		return $this->present;
