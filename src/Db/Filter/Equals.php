@@ -19,7 +19,10 @@ abstract class Equals implements Filter
 
 	abstract protected function getField(): string;
 
-	abstract protected function getParameterName(): string;
+	protected function getParameterName(): ?string
+	{
+		return null;
+	}
 
 	private function __construct(string $type, mixed $parameter = null)
 	{
@@ -59,8 +62,8 @@ abstract class Equals implements Filter
 
 	public function addClause(QueryBuilder $queryBuilder): void
 	{
-		// uniqid = prevent double param names when using filter more than once
-		$parameterName = uniqid($this->getParameterName());
+		// parameter name is optional now for child, uses randomized string by default
+		$parameterName = $this->getParameterName() ?? uniqid('p');
 
 		switch ($this->type)
 		{
