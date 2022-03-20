@@ -7,6 +7,11 @@ class EntityFilterDeleter
 {
 	protected EntityManager $entityManager;
 
+	public function __construct(EntityManager $entityManager)
+	{
+		$this->entityManager = $entityManager;
+	}
+
 	public function filterDelete(string $entityClass, FilterChain $filterChain): int
 	{
 		$queryBuilder = $this->entityManager
