@@ -15,7 +15,7 @@ abstract class Mapping
 	 * @param Collection|Entity[] $entities
 	 * @return Dto[]
 	 */
-	public function createMultiple(array $entities, ?CreateOptions $createOptions = null): array
+	public function createMultiple(Collection|array $entities, ?CreateOptions $createOptions = null): array
 	{
 		if ($entities instanceof Collection)
 		{
