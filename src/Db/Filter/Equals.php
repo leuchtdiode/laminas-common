@@ -6,12 +6,13 @@ use Doctrine\ORM\QueryBuilder;
 
 abstract class Equals implements Filter
 {
-	const VALUE     = 'value';
-	const NOT_VALUE = 'notValue';
-	const NULL      = 'null';
-	const NOT_NULL  = 'notNull';
-	const IN        = 'in';
-	const NOT_IN    = 'notIn';
+	const VALUE         = 'value';
+	const VALUE_OR_NULL = 'valueOrNull';
+	const NOT_VALUE     = 'notValue';
+	const NULL          = 'null';
+	const NOT_NULL      = 'notNull';
+	const IN            = 'in';
+	const NOT_IN        = 'notIn';
 
 	private string $type;
 
@@ -33,6 +34,11 @@ abstract class Equals implements Filter
 	public static function is(mixed $parameter): static
 	{
 		return new static(self::VALUE, $parameter);
+	}
+
+	public static function isOrNull(mixed $parameter): static
+	{
+		return new static(self::VALUE_OR_NULL, $parameter);
 	}
 
 	public static function isNot(mixed $parameter): static
@@ -62,6 +68,8 @@ abstract class Equals implements Filter
 
 	public function addClause(QueryBuilder $queryBuilder): void
 	{
+		$expr = $queryBuilder->expr();
+
 		// parameter name is optional now for child, uses randomized string by default
 		$parameterName = $this->getParameterName() ?? uniqid('p');
 
@@ -71,9 +79,20 @@ abstract class Equals implements Filter
 
 				$queryBuilder
 					->andWhere(
-						$queryBuilder
-							->expr()
-							->eq($this->getField(), ':' . $parameterName)
+						$expr->eq($this->getField(), ':' . $parameterName)
+					)
+					->setParameter($parameterName, $this->parameter);
+
+				break;
+
+			case self::VALUE_OR_NULL:
+
+				$queryBuilder
+					->andWhere(
+						$expr->orX(
+							$expr->eq($this->getField(), ':' . $parameterName),
+							$expr->isNull($this->getField())
+						)
 					)
 					->setParameter($parameterName, $this->parameter);
 
@@ -83,9 +102,7 @@ abstract class Equals implements Filter
 
 				$queryBuilder
 					->andWhere(
-						$queryBuilder
-							->expr()
-							->neq($this->getField(), ':' . $parameterName)
+						$expr->neq($this->getField(), ':' . $parameterName)
 					)
 					->setParameter($parameterName, $this->parameter);
 
@@ -95,9 +112,7 @@ abstract class Equals implements Filter
 
 				$queryBuilder
 					->andWhere(
-						$queryBuilder
-							->expr()
-							->in($this->getField(), ':' . $parameterName)
+						$expr->in($this->getField(), ':' . $parameterName)
 					)
 					->setParameter($parameterName, $this->parameter);
 
@@ -107,9 +122,7 @@ abstract class Equals implements Filter
 
 				$queryBuilder
 					->andWhere(
-						$queryBuilder
-							->expr()
-							->notIn($this->getField(), ':' . $parameterName)
+						$expr->notIn($this->getField(), ':' . $parameterName)
 					)
 					->setParameter($parameterName, $this->parameter);
 
@@ -119,9 +132,7 @@ abstract class Equals implements Filter
 
 				$queryBuilder
 					->andWhere(
-						$queryBuilder
-							->expr()
-							->isNull($this->getField())
+						$expr->isNull($this->getField())
 					);
 
 				break;
@@ -130,9 +141,7 @@ abstract class Equals implements Filter
 
 				$queryBuilder
 					->andWhere(
-						$queryBuilder
-							->expr()
-							->isNotNull($this->getField())
+						$expr->isNotNull($this->getField())
 					);
 
 				break;
