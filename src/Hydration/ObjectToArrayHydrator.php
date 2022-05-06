@@ -3,6 +3,7 @@ namespace Common\Hydration;
 
 use Common\Util\StringUtil;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Exception;
 use ReflectionClass;
@@ -42,7 +43,7 @@ class ObjectToArrayHydrator
 	 */
 	private static function hydrateFromObject($object)
 	{
-		if ($object instanceof DateTime)
+		if ($object instanceof DateTime || $object instanceof DateTimeImmutable)
 		{
 			return $object->format('c');
 		}
