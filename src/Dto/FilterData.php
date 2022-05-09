@@ -14,6 +14,8 @@ class FilterData
 
 	private int $limit = PHP_INT_MAX;
 
+	private bool $distinct = false;
+
 	/**
 	 */
 	public function __construct()
@@ -67,6 +69,17 @@ class FilterData
 	public function setLimit(int $limit): FilterData
 	{
 		$this->limit = $limit;
+		return $this;
+	}
+
+	public function isDistinct(): bool
+	{
+		return $this->distinct;
+	}
+
+	public function setDistinct(bool $distinct): FilterData
+	{
+		$this->distinct = $distinct;
 		return $this;
 	}
 }

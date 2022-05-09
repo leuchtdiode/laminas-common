@@ -47,7 +47,8 @@ abstract class Provider
 					$filterData->getFilterChain(),
 					$filterData->getOrderChain(),
 					$filterData->getOffset(),
-					$filterData->getLimit()
+					$filterData->getLimit(),
+					$filterData->isDistinct()
 				),
 			$createOptions
 		);
