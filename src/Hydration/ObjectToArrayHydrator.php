@@ -17,7 +17,7 @@ class ObjectToArrayHydrator
 	 * @return array
 	 * @throws Exception
 	 */
-	public static function hydrate($arrayOrObject): array
+	public static function hydrate($arrayOrObject): mixed
 	{
 		try
 		{
@@ -41,7 +41,7 @@ class ObjectToArrayHydrator
 	 * @return array|null|string
 	 * @throws ReflectionException
 	 */
-	private static function hydrateFromObject($object)
+	private static function hydrateFromObject($object): mixed
 	{
 		if ($object instanceof DateTime || $object instanceof DateTimeImmutable)
 		{
@@ -50,7 +50,7 @@ class ObjectToArrayHydrator
 
 		if (!$object instanceof ArrayHydratable)
 		{
-			if (method_exists($object, '__toString'))
+			if ($object && method_exists($object, '__toString'))
 			{
 				return (string)$object;
 			}
