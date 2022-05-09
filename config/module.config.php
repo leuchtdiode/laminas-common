@@ -10,6 +10,7 @@ use Common\View\Helper\Config;
 use Common\View\Helper\ConfigFactory;
 use Common\View\Helper\StaticResource;
 use Common\View\Helper\StaticResourceFactory;
+use Common\Db\Functions\Distance;
 
 return [
 
@@ -27,10 +28,20 @@ return [
 				->setRoute('/common')
 				->setChildRoutes(
 					[
-						'country' => require 'routes/country.php'
+						'country' => require 'routes/country.php',
 					]
 				)
 				->getConfig(),
+		],
+	],
+
+	'doctrine' => [
+		'configuration' => [
+			'orm_default' => [
+				'string_functions' => [
+					Distance::NAME => Distance::class,
+				],
+			],
 		],
 	],
 
@@ -69,7 +80,7 @@ return [
 	],
 
 	'view_manager' => [
-		'strategies'   => [
+		'strategies' => [
 			'ViewJsonStrategy',
 		],
 	],
