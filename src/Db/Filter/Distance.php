@@ -40,9 +40,9 @@ class Distance implements Filter
 		$latitudeDestination,
 		$longitudeDestination,
 		int $kilometers
-	): self
+	): Distance
 	{
-		return new self(
+		return new static(
 			self::TYPE_MIN,
 			$latitudeSource,
 			$longitudeSource,
@@ -58,9 +58,9 @@ class Distance implements Filter
 		$latitudeDestination,
 		$longitudeDestination,
 		int $kilometers
-	): self
+	): Distance
 	{
-		return new self(
+		return new static(
 			self::TYPE_MAX,
 			$latitudeSource,
 			$longitudeSource,
