@@ -10,64 +10,16 @@ class Distance implements Filter
 	const TYPE_MIN = 'min';
 	const TYPE_MAX = 'max';
 
-	private string $type;
-	private        $latitudeSource;
-	private        $longitudeSource;
-	private        $latitudeDestination;
-	private        $longitudeDestination;
-	private float  $kilometers;
+	private Distance\FilterParams $params;
 
-	private function __construct(
-		string $type,
-		$latitudeSource,
-		$longitudeSource,
-		$latitudeDestination,
-		$longitudeDestination,
-		float $kilometers
-	)
+	private function __construct(Distance\FilterParams $params)
 	{
-		$this->type                 = $type;
-		$this->latitudeSource       = $latitudeSource;
-		$this->longitudeSource      = $longitudeSource;
-		$this->latitudeDestination  = $latitudeDestination;
-		$this->longitudeDestination = $longitudeDestination;
-		$this->kilometers           = $kilometers;
+		$this->params = $params;
 	}
 
-	public static function min(
-		$latitudeSource,
-		$longitudeSource,
-		$latitudeDestination,
-		$longitudeDestination,
-		int $kilometers
-	): Distance
+	public static function filter(Distance\FilterParams $params): Distance
 	{
-		return new static(
-			self::TYPE_MIN,
-			$latitudeSource,
-			$longitudeSource,
-			$latitudeDestination,
-			$longitudeDestination,
-			$kilometers
-		);
-	}
-
-	public static function max(
-		$latitudeSource,
-		$longitudeSource,
-		$latitudeDestination,
-		$longitudeDestination,
-		int $kilometers
-	): Distance
-	{
-		return new static(
-			self::TYPE_MAX,
-			$latitudeSource,
-			$longitudeSource,
-			$latitudeDestination,
-			$longitudeDestination,
-			$kilometers
-		);
+		return new static($params);
 	}
 
 	/**
@@ -77,47 +29,57 @@ class Distance implements Filter
 	{
 		$expr = $queryBuilder->expr();
 
-		$latitudeSourceParam       = uniqid('lat');
-		$longitudeSourceParam      = uniqid('lon');
-		$latitudeDestinationParam  = uniqid('lat');
-		$longitudeDestinationParam = uniqid('lon');
+		$type = $this->params->getType();
+
+		if ($type !== self::TYPE_MIN && $type !== self::TYPE_MAX)
+		{
+			throw new Exception('Invalid type given');
+		}
+
+		$sourceLatitude       = $this->handleColumnOrValue($queryBuilder, $this->params->getSourceLatitude());
+		$sourceLongitude      = $this->handleColumnOrValue($queryBuilder, $this->params->getSourceLongitude());
+		$destinationLatitude  = $this->handleColumnOrValue($queryBuilder, $this->params->getDestinationLatitude());
+		$destinationLongitude = $this->handleColumnOrValue($queryBuilder, $this->params->getDestinationLongitude());
 
 		$distance = sprintf(
-			'DISTANCE(:%s, :%s, :%s, :%s)',
-			$latitudeSourceParam,
-			$longitudeSourceParam,
-			$latitudeDestinationParam,
-			$longitudeDestinationParam
+			'DISTANCE(%s, %s, %s, %s)',
+			$sourceLatitude,
+			$sourceLongitude,
+			$destinationLatitude,
+			$destinationLongitude
 		);
 
-		if ($this->type === self::TYPE_MIN)
+		if ($type === self::TYPE_MIN)
 		{
 			$queryBuilder
 				->andWhere(
-					$expr->gte($distance, $this->kilometers)
-				)
-				->setParameter($latitudeSourceParam, $this->latitudeSource)
-				->setParameter($longitudeSourceParam, $this->longitudeSource)
-				->setParameter($latitudeDestinationParam, $this->latitudeDestination)
-				->setParameter($longitudeDestinationParam, $this->longitudeDestination);
-
-			return;
+					$expr->gte($distance, $this->params->getKilometers())
+				);
 		}
 
-		if ($this->type === self::TYPE_MAX)
+		if ($type === self::TYPE_MAX)
 		{
 			$queryBuilder
 				->andWhere(
-					$expr->lte($distance, $this->kilometers)
-				)
-				->setParameter($latitudeSourceParam, $this->latitudeSource)
-				->setParameter($longitudeSourceParam, $this->longitudeSource)
-				->setParameter($latitudeDestinationParam, $this->latitudeDestination)
-				->setParameter($longitudeDestinationParam, $this->longitudeDestination);
+					$expr->lte($distance, $this->params->getKilometers())
+				);
+		}
+	}
 
-			return;
+	private function handleColumnOrValue(QueryBuilder $queryBuilder, Filter\Distance\ColumnOrValue $columnOrValue)
+	{
+		$sourceLatitude = $columnOrValue->getColumn();
+
+		if (!$sourceLatitude)
+		{
+			$sourceLatitude = ':' . ($sourceLatitudeParam = uniqid('lat'));
+
+			$queryBuilder->setParameter(
+				$sourceLatitudeParam,
+				$columnOrValue->getValue()
+			);
 		}
 
-		throw new Exception('Invalid type given');
+		return $sourceLatitude;
 	}
 }
