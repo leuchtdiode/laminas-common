@@ -11,26 +11,63 @@ class Distance implements Filter
 	const TYPE_MAX = 'max';
 
 	private string $type;
-	private float  $latitude;
-	private float  $longitude;
+	private        $latitudeSource;
+	private        $longitudeSource;
+	private        $latitudeDestination;
+	private        $longitudeDestination;
 	private float  $kilometers;
 
-	private function __construct(string $type, float $latitude, float $longitude, int $kilometers)
+	private function __construct(
+		string $type,
+		$latitudeSource,
+		$longitudeSource,
+		$latitudeDestination,
+		$longitudeDestination,
+		float $kilometers
+	)
 	{
-		$this->type       = $type;
-		$this->latitude   = $latitude;
-		$this->longitude  = $longitude;
-		$this->kilometers = $kilometers;
+		$this->type                 = $type;
+		$this->latitudeSource       = $latitudeSource;
+		$this->longitudeSource      = $longitudeSource;
+		$this->latitudeDestination  = $latitudeDestination;
+		$this->longitudeDestination = $longitudeDestination;
+		$this->kilometers           = $kilometers;
 	}
 
-	public static function min(float $latitude, float $longitude, int $kilometers): self
+	public static function min(
+		$latitudeSource,
+		$longitudeSource,
+		$latitudeDestination,
+		$longitudeDestination,
+		int $kilometers
+	): self
 	{
-		return new self(self::TYPE_MIN, $latitude, $longitude, $kilometers);
+		return new self(
+			self::TYPE_MIN,
+			$latitudeSource,
+			$longitudeSource,
+			$latitudeDestination,
+			$longitudeDestination,
+			$kilometers
+		);
 	}
 
-	public static function max(float $latitude, float $longitude, int $kilometers): self
+	public static function max(
+		$latitudeSource,
+		$longitudeSource,
+		$latitudeDestination,
+		$longitudeDestination,
+		int $kilometers
+	): self
 	{
-		return new self(self::TYPE_MAX, $latitude, $longitude, $kilometers);
+		return new self(
+			self::TYPE_MAX,
+			$latitudeSource,
+			$longitudeSource,
+			$latitudeDestination,
+			$longitudeDestination,
+			$kilometers
+		);
 	}
 
 	/**
@@ -40,20 +77,29 @@ class Distance implements Filter
 	{
 		$expr = $queryBuilder->expr();
 
-		$latitudeParam  = uniqid('lat');
-		$longitudeParam = uniqid('lon');
+		$latitudeSourceParam       = uniqid('lat');
+		$longitudeSourceParam      = uniqid('lon');
+		$latitudeDestinationParam  = uniqid('lat');
+		$longitudeDestinationParam = uniqid('lon');
+
+		$distance = sprintf(
+			'DISTANCE(:%s, :%s, :%s, :%s)',
+			$latitudeSourceParam,
+			$longitudeSourceParam,
+			$latitudeDestinationParam,
+			$longitudeDestinationParam
+		);
 
 		if ($this->type === self::TYPE_MIN)
 		{
 			$queryBuilder
 				->andWhere(
-					$expr->gte(
-						'DISTANCE(t.latitude, t.longitude, :' . $latitudeParam . ', :' . $longitudeParam . ')',
-						$this->kilometers
-					)
+					$expr->gte($distance, $this->kilometers)
 				)
-				->setParameter($latitudeParam, $this->latitude)
-				->setParameter($longitudeParam, $this->longitude);
+				->setParameter($latitudeSourceParam, $this->latitudeSource)
+				->setParameter($longitudeSourceParam, $this->longitudeSource)
+				->setParameter($latitudeDestinationParam, $this->latitudeDestination)
+				->setParameter($longitudeDestinationParam, $this->longitudeDestination);
 
 			return;
 		}
@@ -62,13 +108,12 @@ class Distance implements Filter
 		{
 			$queryBuilder
 				->andWhere(
-					$expr->lte(
-						'DISTANCE(t.latitude, t.longitude, :' . $latitudeParam . ', :' . $longitudeParam . ')',
-						$this->kilometers
-					)
+					$expr->lte($distance, $this->kilometers)
 				)
-				->setParameter($latitudeParam, $this->latitude)
-				->setParameter($longitudeParam, $this->longitude);
+				->setParameter($latitudeSourceParam, $this->latitudeSource)
+				->setParameter($longitudeSourceParam, $this->longitudeSource)
+				->setParameter($latitudeDestinationParam, $this->latitudeDestination)
+				->setParameter($longitudeDestinationParam, $this->longitudeDestination);
 
 			return;
 		}
