@@ -6,11 +6,9 @@ use Doctrine\ORM\QueryBuilder;
 
 abstract class Distance implements Order
 {
-	private float $latitude;
-
-	private float $longitude;
-
-	private string $direction;
+	protected float $latitude;
+	protected float $longitude;
+	protected string $direction;
 
 	abstract protected function getAlias(): string;
 
