@@ -49,6 +49,11 @@ abstract class Data
 					parse_str($content, $this->data);
 				}
 			}
+
+			if ($this->data === null)
+			{
+				$this->data = [];
+			}
 		}
 
 		return $this;
