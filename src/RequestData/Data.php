@@ -23,7 +23,7 @@ abstract class Data
 
 	protected ContainerInterface $container;
 
-	private array $data;
+	private ?array $data = null;
 
 	public function __construct(ContainerInterface $container)
 	{
