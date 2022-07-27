@@ -12,6 +12,8 @@ use ReflectionMethod;
 
 class ObjectToArrayHydrator
 {
+	const OBJECT_TO_ARRAY_HYDRATOR_PROPERTY = '@ObjectToArrayHydratorProperty';
+
 	/**
 	 * @param $arrayOrObject
 	 * @return array
@@ -153,6 +155,12 @@ class ObjectToArrayHydrator
 				return true;
 			}
 
+			// check if method has necessary doc comment (legacy)
+			if (StringUtil::contains($method->getDocComment(), self::OBJECT_TO_ARRAY_HYDRATOR_PROPERTY))
+			{
+				return true;
+			}
+
 			$cutPosition = StringUtil::startsWith($method->getName(), 'get')
 				? 3
 				: 2;
@@ -165,6 +173,11 @@ class ObjectToArrayHydrator
 			$property = $reflectionClass->getProperty($propertyName);
 
 			if ($property && $property->getAttributes(ObjectToArrayHydratorProperty::class))
+			{
+				return true;
+			}
+
+			if ($property && StringUtil::contains($property->getDocComment(), self::OBJECT_TO_ARRAY_HYDRATOR_PROPERTY))
 			{
 				return true;
 			}

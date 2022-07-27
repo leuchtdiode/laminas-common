@@ -3,34 +3,24 @@ namespace Common\Util;
 
 class StringUtil
 {
-	public static function contains($string, $searchString): bool
+	public static function contains(string $string, string $searchString): bool
 	{
 		return str_contains($string, $searchString);
 	}
 
-	public static function startsWith($string, $searchString): bool
+	public static function startsWith(string $string, string $searchString): bool
 	{
 		return str_starts_with($string, $searchString);
 	}
 
-	/**
-	 * @param $string
-	 * @param $searchString
-	 * @return bool
-	 */
-	public static function endsWith($string, $searchString): bool
+	public static function endsWith(string $string, string $searchString): bool
 	{
 		$length = strlen($searchString);
 
 		return substr($string, -$length) === $searchString;
 	}
 
-	/**
-	 * @param string $a
-	 * @param string $b
-	 * @return int
-	 */
-	public static function compare($a, $b): int
+	public static function compare(string $a, string $b): int
 	{
 		return strcasecmp($a, $b);
 	}
