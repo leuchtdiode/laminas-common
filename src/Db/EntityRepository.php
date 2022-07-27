@@ -7,15 +7,19 @@ use Doctrine\ORM\NoResultException;
 
 class EntityRepository extends DoctrineEntityRepository
 {
+	const DEFAULT_OFFSET   = 0;
+	const DEFAULT_LIMIT    = PHP_INT_MAX;
+	const DEFAULT_DISTINCT = false;
+
 	/**
 	 * @return Entity[]
 	 */
 	public function filter(
 		FilterChain $filterChain,
-		OrderChain $orderChain = null,
-		int $offset = 0,
-		int $limit = PHP_INT_MAX,
-		bool $distinct = false
+		?OrderChain $orderChain = null,
+		?int $offset = self::DEFAULT_OFFSET,
+		?int $limit = self::DEFAULT_LIMIT,
+		?bool $distinct = self::DEFAULT_DISTINCT
 	): array
 	{
 		$queryBuilder = $this->createQueryBuilder('t');
@@ -38,6 +42,16 @@ class EntityRepository extends DoctrineEntityRepository
 			}
 		}
 
+		if ($offset === null)
+		{
+			$offset = self::DEFAULT_OFFSET;
+		}
+
+		if ($limit === null)
+		{
+			$limit = self::DEFAULT_LIMIT;
+		}
+
 		$queryBuilder->setFirstResult($offset);
 		$queryBuilder->setMaxResults($limit);
 
@@ -50,7 +64,7 @@ class EntityRepository extends DoctrineEntityRepository
 	 * @throws NonUniqueResultException
 	 * @throws NoResultException
 	 */
-	public function countWithFilter(FilterChain $filterChain = null, bool $distinct = false): int
+	public function countWithFilter(FilterChain $filterChain = null, ?bool $distinct = false): int
 	{
 		$identifiers = $this
 			->getClassMetadata()
