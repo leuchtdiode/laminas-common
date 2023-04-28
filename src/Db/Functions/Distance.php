@@ -5,6 +5,7 @@ use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Throwable;
 
 class Distance extends FunctionNode
 {
@@ -17,6 +18,9 @@ class Distance extends FunctionNode
 	protected $latDestination;
 	protected $lngDestination;
 
+	/**
+	 * @throws Throwable
+	 */
 	public function parse(Parser $parser): void
 	{
 		$parser->match(Lexer::T_IDENTIFIER);

@@ -2,6 +2,7 @@
 namespace Common\Db;
 
 use Doctrine\ORM\EntityManager;
+use Throwable;
 
 class EntityFilterDeleter
 {
@@ -12,6 +13,9 @@ class EntityFilterDeleter
 		$this->entityManager = $entityManager;
 	}
 
+	/**
+	 * @throws Throwable
+	 */
 	public function filterDelete(string $entityClass, FilterChain $filterChain): int
 	{
 		$queryBuilder = $this->entityManager

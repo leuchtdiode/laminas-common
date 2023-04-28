@@ -25,7 +25,7 @@ class BooleanTest extends Base
 	/**
 	 * @return array
 	 */
-	public function myDataSet()
+	public static function myDataSet()
 	{
 		return [
 			[ null, true, null ],

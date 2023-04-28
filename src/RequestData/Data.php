@@ -7,12 +7,10 @@ use Common\RequestData\PropertyDefinition\PropertyDefinition;
 use Common\Translator;
 use Common\Util\StringUtil;
 use Exception;
-use JetBrains\PhpStorm\Pure;
 use Laminas\Filter\FilterInterface;
 use Laminas\Stdlib\RequestInterface;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 abstract class Data
 {
@@ -66,7 +64,7 @@ abstract class Data
 	}
 
 	/**
-	 * @throws Exception
+	 * @throws Throwable
 	 */
 	public function getValues(): Values
 	{
@@ -82,8 +80,7 @@ abstract class Data
 
 	/**
 	 * @param PropertyDefinition[] $definitions
-	 * @throws ContainerExceptionInterface
-	 * @throws NotFoundExceptionInterface
+	 * @throws Throwable
 	 */
 	private function handleDefinitions(Values $values, array $definitions): void
 	{

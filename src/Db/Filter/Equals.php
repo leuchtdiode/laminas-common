@@ -16,7 +16,7 @@ abstract class Equals implements Filter
 
 	private string $type;
 
-	private mixed $parameter = null;
+	private mixed $parameter;
 
 	abstract protected function getField(): string;
 

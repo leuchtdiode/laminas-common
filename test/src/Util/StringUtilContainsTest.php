@@ -23,7 +23,7 @@ class StringUtilContainsTest extends Base
 	/**
 	 * @return array
 	 */
-	public function containsSet()
+	public static function containsSet()
 	{
 		return [
 			[ 'test', 't', true ],

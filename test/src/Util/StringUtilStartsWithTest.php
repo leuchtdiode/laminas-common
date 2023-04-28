@@ -23,7 +23,7 @@ class StringUtilStartsWithTest extends Base
 	/**
 	 * @return array
 	 */
-	public function startsWithSet()
+	public static function startsWithSet()
 	{
 		return [
 			[ 'test', 't', true ],

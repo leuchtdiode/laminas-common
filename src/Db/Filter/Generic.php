@@ -57,27 +57,14 @@ abstract class Generic implements Filter
 
 		foreach ($this->getColumns() as $column => $mode)
 		{
-			switch ($mode)
+			$condition = match ($mode)
 			{
-				case self::EQ:
-					$condition = $exp->eq($column, $exp->literal($value));
-					break;
-
-				case self::LIKE:
-					$condition = $exp->like($column, $exp->literal("%{$value}%"));
-					break;
-
-				case self::STARTS_WITH:
-					$condition = $exp->like($column, $exp->literal("{$value}%"));
-					break;
-
-				case self::ENDS_WITH:
-					$condition = $exp->like($column, $exp->literal("%{$value}"));
-					break;
-
-				default:
-					throw new RuntimeException("invalid mode in string filter");
-			}
+				self::EQ => $exp->eq($column, $exp->literal($value)),
+				self::LIKE => $exp->like($column, $exp->literal("%{$value}%")),
+				self::STARTS_WITH => $exp->like($column, $exp->literal("{$value}%")),
+				self::ENDS_WITH => $exp->like($column, $exp->literal("%{$value}")),
+				default => throw new RuntimeException("invalid mode in string filter"),
+			};
 
 			$conditions[] = $condition;
 		}

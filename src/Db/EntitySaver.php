@@ -2,17 +2,19 @@
 namespace Common\Db;
 
 use Doctrine\ORM\EntityManager;
-use Exception;
+use Throwable;
 
 class EntitySaver
 {
-	protected EntityManager $entityManager;
-
-	public function __construct(EntityManager $entityManager)
+	public function __construct(
+		protected EntityManager $entityManager
+	)
 	{
-		$this->entityManager = $entityManager;
 	}
 
+	/**
+	 * @throws Throwable
+	 */
 	public function save(Entity $entity, bool $flush = true): void
 	{
 		$this->entityManager->persist($entity);
@@ -24,9 +26,9 @@ class EntitySaver
 	}
 
 	/**
-	 * @throws Exception
+	 * @throws Throwable
 	 */
-	public function flush()
+	public function flush(): void
 	{
 		$this->entityManager->flush();
 	}

@@ -90,7 +90,7 @@ class ProviderTest extends TestCase
 	/**
 	 * @return array
 	 */
-	public function isoCodeSet()
+	public static function isoCodeSet()
 	{
 		return [
 			[ 'de_DE', 'AT', 'Österreich' ],

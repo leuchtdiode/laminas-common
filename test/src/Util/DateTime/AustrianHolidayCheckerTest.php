@@ -46,7 +46,7 @@ class AustrianHolidayCheckerTest extends Base
 
 	/**
 	 */
-	public function years()
+	public static function years()
 	{
 		return [
 			[ 2019 ],

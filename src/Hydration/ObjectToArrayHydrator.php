@@ -172,12 +172,12 @@ class ObjectToArrayHydrator
 
 			$property = $reflectionClass->getProperty($propertyName);
 
-			if ($property && $property->getAttributes(ObjectToArrayHydratorProperty::class))
+			if ($property->getAttributes(ObjectToArrayHydratorProperty::class))
 			{
 				return true;
 			}
 
-			if ($property && StringUtil::contains($property->getDocComment(), self::OBJECT_TO_ARRAY_HYDRATOR_PROPERTY))
+			if (StringUtil::contains($property->getDocComment(), self::OBJECT_TO_ARRAY_HYDRATOR_PROPERTY))
 			{
 				return true;
 			}
