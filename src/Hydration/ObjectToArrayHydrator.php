@@ -9,6 +9,7 @@ use Exception;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use UnitEnum;
 
 class ObjectToArrayHydrator
 {
@@ -48,6 +49,11 @@ class ObjectToArrayHydrator
 		if ($object instanceof DateTime || $object instanceof DateTimeImmutable)
 		{
 			return $object->format('c');
+		}
+
+		if ($object instanceof UnitEnum && property_exists($object, 'value'))
+		{
+			return $object->value;
 		}
 
 		if (!$object instanceof ArrayHydratable)
