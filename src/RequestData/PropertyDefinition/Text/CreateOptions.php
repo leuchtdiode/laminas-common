@@ -1,8 +1,6 @@
 <?php
 namespace Common\RequestData\PropertyDefinition\Text;
 
-use JetBrains\PhpStorm\Pure;
-
 class CreateOptions
 {
 	private bool $trim = true;

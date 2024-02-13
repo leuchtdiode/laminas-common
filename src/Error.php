@@ -6,10 +6,10 @@ use Common\Hydration\ObjectToArrayHydratorProperty;
 
 abstract class Error implements ArrayHydratable
 {
-	#[ObjectToArrayHydratorProperty]
 	/**
 	 * @var Error[]
 	 */
+	#[ObjectToArrayHydratorProperty]
 	private array $subErrors = [];
 
 	#[ObjectToArrayHydratorProperty]
