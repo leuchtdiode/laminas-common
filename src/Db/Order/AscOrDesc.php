@@ -3,6 +3,7 @@ namespace Common\Db\Order;
 
 use Common\Db\Order;
 use Doctrine\ORM\QueryBuilder;
+use RuntimeException;
 
 abstract class AscOrDesc implements Order
 {
@@ -37,6 +38,11 @@ abstract class AscOrDesc implements Order
 
 	public function addOrder(QueryBuilder $queryBuilder): void
 	{
+		if (!in_array(strtolower($this->direction), [ 'asc', 'desc' ]))
+		{
+			throw new RuntimeException('Invalid direction given');
+		}
+
 		$queryBuilder->addOrderBy(
 			$this->getField(),
 			$this->direction
