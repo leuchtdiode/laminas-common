@@ -132,39 +132,20 @@ abstract class Data
 
 			$transformerClass = $definition->getTransformer();
 
-			if ($transformerClass)
+			if (
+				$transformerClass
+				&& $definition->getTransformerExecution() === PropertyDefinition::TRANSFORMER_EXECUTION__BEFORE_VALIDATION
+			)
 			{
-				$transformer = $this->container->get($transformerClass);
-
-				if (!$transformer)
+				if (!$this->tryToTransformValue($definition, $value, $rawValue))
 				{
-					throw new Exception('Transformer ' . $transformerClass . ' is not available');
-				}
-
-				try
-				{
-					$rawValue = $transformer->transform($rawValue);
-
-					$value->setValue($rawValue);
-				}
-				catch (Exception $ex)
-				{
-					$value->setValue(null);
-
-					$value->addError(
-						PropertyIsInvalid::create(
-							$this->getErrorLabel($definition),
-							$ex->getMessage()
-						)
-					);
-
 					continue;
 				}
 			}
 
 			$validatorChain = $definition->getValidatorChain();
 
-			if ($validatorChain && !$validatorChain->isValid($rawValue))
+			if ($validatorChain && !$validatorChain->isValid($value->getValue()))
 			{
 				$value->setValue(null);
 
@@ -178,7 +159,52 @@ abstract class Data
 					);
 				}
 			}
+
+			if (
+				$transformerClass
+				&& $definition->getTransformerExecution() === PropertyDefinition::TRANSFORMER_EXECUTION__AFTER_VALIDATION
+			)
+			{
+				$this->tryToTransformValue($definition, $value, $rawValue);
+			}
 		}
+	}
+
+	/**
+	 * @throws Throwable
+	 */
+	private function tryToTransformValue(PropertyDefinition $definition, Value $value, mixed $rawValue): bool
+	{
+		$transformer = $this->container->get(
+			$transformerClass = $definition->getTransformer()
+		);
+
+		if (!$transformer)
+		{
+			throw new Exception('Transformer ' . $transformerClass . ' is not available');
+		}
+
+		try
+		{
+			$rawValue = $transformer->transform($rawValue);
+
+			$value->setValue($rawValue);
+
+			return true;
+		}
+		catch (Exception $ex)
+		{
+			$value->setValue(null);
+
+			$value->addError(
+				PropertyIsInvalid::create(
+					$this->getErrorLabel($definition),
+					$ex->getMessage()
+				)
+			);
+		}
+
+		return false;
 	}
 
 	private function handleValue(PropertyDefinition $definition): array

@@ -8,6 +8,9 @@ use Laminas\Validator\ValidatorInterface;
 
 abstract class PropertyDefinition
 {
+	public const string TRANSFORMER_EXECUTION__BEFORE_VALIDATION = 'before-validation';
+	public const string TRANSFORMER_EXECUTION__AFTER_VALIDATION  = 'after-validation';
+
 	protected string $name;
 
 	/**
@@ -23,7 +26,8 @@ abstract class PropertyDefinition
 
 	protected ?FilterChain $filterChain = null;
 
-	protected ?string $transformer = null;
+	protected ?string $transformer          = null;
+	protected ?string $transformerExecution = self::TRANSFORMER_EXECUTION__BEFORE_VALIDATION;
 
 	/**
 	 */
@@ -123,6 +127,17 @@ abstract class PropertyDefinition
 	public function setTransformer(?string $transformer): PropertyDefinition
 	{
 		$this->transformer = $transformer;
+		return $this;
+	}
+
+	public function getTransformerExecution(): ?string
+	{
+		return $this->transformerExecution;
+	}
+
+	public function setTransformerExecution(?string $transformerExecution): PropertyDefinition
+	{
+		$this->transformerExecution = $transformerExecution;
 		return $this;
 	}
 }
