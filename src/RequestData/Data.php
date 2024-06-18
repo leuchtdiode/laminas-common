@@ -143,10 +143,14 @@ abstract class Data
 				}
 			}
 
+			$isValid = true;
+
 			$validatorChain = $definition->getValidatorChain();
 
 			if ($validatorChain && !$validatorChain->isValid($value->getValue()))
 			{
+				$isValid = false;
+
 				$value->setValue(null);
 
 				foreach ($validatorChain->getMessages() as $message)
@@ -161,7 +165,8 @@ abstract class Data
 			}
 
 			if (
-				$transformerClass
+				$isValid
+				&& $transformerClass
 				&& $definition->getTransformerExecution() === PropertyDefinition::TRANSFORMER_EXECUTION__AFTER_VALIDATION
 			)
 			{
