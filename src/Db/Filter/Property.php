@@ -95,6 +95,13 @@ class Property implements Filter
 			$queryBuilder->setParameter($valuesParam, $this->params->getValues());
 		}
 
+		if ($this->params instanceof Filter\Property\NullParams)
+		{
+			$orX->add(
+				$this->params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter)
+			);
+		}
+
 		if ($this->params instanceof Filter\Property\BooleanParams)
 		{
 			$orX->add(
