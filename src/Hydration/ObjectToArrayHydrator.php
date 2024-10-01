@@ -84,31 +84,53 @@ class ObjectToArrayHydrator
 				continue;
 			}
 
-			$value = $method->invoke($object);
-
-			if (is_object($value))
-			{
-				if ($value instanceof Collection)
-				{
-					$value = self::hydrateFromArray($value);
-				}
-				else
-				{
-					$value = self::hydrateFromObject($value);
-				}
-			}
-			else
-			{
-				if (is_array($value))
-				{
-					$value = self::hydrateFromArray($value);
-				}
-			}
+			$value = self::handleValue($method->invoke($object));
 
 			$asArray[self::correctMethodName($methodName)] = $value;
 		}
 
+		$hydrationConfigAttribute = $reflection->getAttributes(Hydration::class)[0] ?? null;
+
+		if ($hydrationConfigAttribute && method_exists($object, 'getData'))
+		{
+			$excludedProperties = $hydrationConfigAttribute->getArguments()['excludedProperties'] ?? [];
+
+			foreach ($object->getData() as $property => $value)
+			{
+				if (in_array($property, $excludedProperties))
+				{
+					continue;
+				}
+
+				$asArray[$property] = self::handleValue($value);
+			}
+		}
+
 		return $asArray;
+	}
+
+	private static function handleValue(mixed $value): mixed
+	{
+		if (is_object($value))
+		{
+			if ($value instanceof Collection)
+			{
+				$value = self::hydrateFromArray($value);
+			}
+			else
+			{
+				$value = self::hydrateFromObject($value);
+			}
+		}
+		else
+		{
+			if (is_array($value))
+			{
+				$value = self::hydrateFromArray($value);
+			}
+		}
+
+		return $value;
 	}
 
 	/**

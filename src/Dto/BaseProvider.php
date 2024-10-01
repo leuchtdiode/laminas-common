@@ -1,17 +1,44 @@
 <?php
 namespace Common\Dto;
 
-use Common\Db\Entity;
 use Common\Db\EntityRepository;
 use Common\Db\FilterChain;
+use Common\Db\Entity;
+use Common\Dto\Provide\HandleFilterParams;
+use Common\Dto\Provide\HandleFilterResult;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Psr\Container\ContainerInterface;
 
-abstract class Provider
+abstract class BaseProvider
 {
-	abstract protected function getRepository(): EntityRepository;
+	abstract protected function getKey(): string;
 
-	abstract protected function getDtoMapping(): Mapping;
+	public function __construct(
+		private readonly ContainerInterface $container,
+		private readonly KeyConfig $keyConfig,
+		private readonly DefaultMapper $defaultMapper
+	)
+	{
+	}
+
+	protected function getRepository(): EntityRepository
+	{
+		return $this->container->get($this->keyConfig->getDbNamespace($this->getKey()) . '\Repository');
+	}
+
+	public function handleFilter(HandleFilterParams $params): HandleFilterResult
+	{
+		$result = new HandleFilterResult();
+
+		$filterChain = $params->getFilterChain();
+
+		// TODO do generic filters here
+
+		$result->setFilterChain($filterChain);
+
+		return $result;
+	}
 
 	public function byId($id, ?CreateOptions $createOptions = null): ?Dto
 	{
@@ -55,6 +82,22 @@ abstract class Provider
 	}
 
 	/**
+	 * @return mixed[]
+	 */
+	public function filterAndReturnIds(FilterData $filterData): array
+	{
+		return $this
+			->getRepository()
+			->filterAndReturnIds(
+				$filterData->getFilterChain(),
+				$filterData->getOrderChain(),
+				$filterData->getOffset(),
+				$filterData->getLimit(),
+				$filterData->isDistinct()
+			);
+	}
+
+	/**
 	 * @param FilterChain $filterChain
 	 * @return int
 	 * @throws NonUniqueResultException|NoResultException
@@ -68,9 +111,11 @@ abstract class Provider
 
 	protected function createDto(Entity $entity, ?CreateOptions $createOptions = null): Dto
 	{
-		return $this
-			->getDtoMapping()
-			->createSingle($entity, $createOptions);
+		return $this->defaultMapper->map(
+			DefaultMapParams::create()
+				->setEntity($entity)
+				->setCreateOptions($createOptions)
+		);
 	}
 
 	/**
