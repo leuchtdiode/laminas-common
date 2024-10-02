@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Exception;
 use ReflectionClass;
+use Throwable;
 
 class DefaultMapper
 {
@@ -18,7 +19,10 @@ class DefaultMapper
 	{
 	}
 
-	public function map(DefaultMapParams $params): Dto
+	/**
+	 * @throws Throwable
+	 */
+	public function map(DefaultMapParams $params): ?Dto
 	{
 		$entity        = $params->getEntity();
 		$level         = $params->getLevel();
@@ -29,9 +33,11 @@ class DefaultMapper
 		// attributes not showing up in real class
 		$reflectionClass = new ReflectionClass($realClass);
 
-		if (!($entityConfigAttribute = $reflectionClass->getAttributes(EntityConfig::class)[0] ?? null))
+		$entityConfigAttribute = $reflectionClass->getAttributes(EntityConfig::class)[0] ?? null;
+
+		if (!$entityConfigAttribute)
 		{
-			throw new Exception('Could not find entity config for ' . get_class($entity));
+			return null;
 		}
 
 		$dtoKey = $entityConfigAttribute->getArguments()['dtoKey'];
@@ -139,7 +145,10 @@ class DefaultMapper
 		return new $dtoClass($dtoKey, $data);
 	}
 
-	private function findGetter(CommonDbEntity $entity, $propertyName)
+	/**
+	 * @throws Throwable
+	 */
+	private function findGetter(CommonDbEntity $entity, string $propertyName): string
 	{
 		foreach ([ 'get', 'is' ] as $prefix)
 		{
