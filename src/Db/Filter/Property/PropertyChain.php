@@ -12,7 +12,23 @@ class PropertyChain
 
 	public static function create(): static
 	{
-	    return new static();
+		return new static();
+	}
+
+	public static function buildFromString(string $string): static
+	{
+		$properties = [];
+
+		foreach (explode('.', $string) as $property)
+		{
+			$properties[] = PropertyChainItem::create()
+				->setName($property);
+		}
+
+		$chain = new static();
+		$chain->setProperties($properties);
+
+		return $chain;
 	}
 
 	/**

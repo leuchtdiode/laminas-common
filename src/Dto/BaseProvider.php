@@ -1,9 +1,10 @@
 <?php
 namespace Common\Dto;
 
-use Common\Db\EntityRepository;
-use Common\Db\FilterChain;
 use Common\Db\Entity;
+use Common\Db\EntityRepository;
+use Common\Db\Filter\Property;
+use Common\Db\FilterChain;
 use Common\Dto\Provide\HandleFilterParams;
 use Common\Dto\Provide\HandleFilterResult;
 use Doctrine\ORM\NonUniqueResultException;
@@ -33,7 +34,30 @@ abstract class BaseProvider
 
 		$filterChain = $params->getFilterChain();
 
-		// TODO do generic filters here
+		foreach ($params->getFilter() as $filterItem)
+		{
+			if ($filterItem->getType() === 'generic')
+			{
+				$value = $filterItem->getValue();
+
+				$filterType = $value['filterType'];
+
+				if ($filterType === 'equals')
+				{
+					$filterChain->addFilter(
+						Property::filter(
+							Property\EqualsParams::create()
+								->setPropertyChain(
+									Property\PropertyChain::buildFromString($filterItem->getProperty())
+								)
+								->setValues($value['filterValues'])
+						)
+					);
+				}
+
+				// more generic filters here
+			}
+		}
 
 		$result->setFilterChain($filterChain);
 
