@@ -81,6 +81,19 @@ abstract class BaseProvider
 					);
 				}
 
+				if ($filterType === 'in')
+				{
+					$filterChain->addFilter(
+						Property::filter(
+							Property\InParams::create()
+								->setValues($value['filterValues'])
+								->setPropertyChain(
+									Property\PropertyChain::buildFromString($filterItem->getProperty())
+								)
+						)
+					);
+				}
+
 				// more generic filters here
 			}
 		}
