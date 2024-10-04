@@ -5,8 +5,12 @@ namespace Common\Db\Filter;
 
 use Common\Db\Filter;
 use Common\Db\Filter\Property\BaseParams;
+use Common\Db\Filter\Property\HandleParams;
+use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
+use Throwable;
 
 class Property implements Filter
 {
@@ -16,11 +20,14 @@ class Property implements Filter
 	{
 	}
 
-	public static function filter(BaseParams $params)
+	public static function filter(BaseParams $params): static
 	{
 		return new static($params);
 	}
 
+	/**
+	 * @throws Throwable
+	 */
 	public function addClause(QueryBuilder $queryBuilder): void
 	{
 		$propertyChain = $this->params->getPropertyChain();
@@ -59,13 +66,61 @@ class Property implements Filter
 			{
 				$propertyNameToFilter = $property->getName();
 			}
+
+			if (($params = $property->getParams()))
+			{
+				$andx = new Andx();
+
+				foreach ($params as $theParams)
+				{
+					$andx->add(
+						$this->handleParams(
+							Filter\Property\HandleParams::create()
+								->setQueryBuilder($queryBuilder)
+								->setParams($theParams)
+								->setSubAlias($subAlias)
+								->setPropertyName($theParams->getProperty())
+						)
+					);
+				}
+
+				$subQb->andWhere($andx);
+			}
 		}
 
-		if ($this->params instanceof Filter\Property\InParams)
+		$orX->add(
+			$this->handleParams(
+				Filter\Property\HandleParams::create()
+					->setQueryBuilder($queryBuilder)
+					->setParams($this->params)
+					->setSubAlias($subAlias)
+					->setPropertyName($propertyNameToFilter)
+			)
+		);
+
+		$subQb->andWhere($orX);
+
+		$queryBuilder->andWhere(
+			$expr->exists($subQb->getDQL())
+		);
+	}
+
+	/**
+	 * @throws Throwable
+	 */
+	private function handleParams(HandleParams $handleParams): mixed
+	{
+		$queryBuilder         = $handleParams->getQueryBuilder();
+		$expr                 = $queryBuilder->expr();
+		$params               = $handleParams->getParams();
+		$propertyNameToFilter = $handleParams->getPropertyName();
+		$subAlias             = $handleParams->getSubAlias();
+
+		if ($params instanceof Filter\Property\InParams)
 		{
 			$itemOr = new Orx();
 
-			foreach ($this->params->getValues() as $value)
+			foreach ($params->getValues() as $value)
 			{
 				$valueParam = uniqid('vp');
 
@@ -81,45 +136,33 @@ class Property implements Filter
 				$queryBuilder->setParameter($valueParam, $value);
 			}
 
-			$orX->add($itemOr);
+			return $itemOr;
 		}
 
-		if ($this->params instanceof Filter\Property\EqualsParams)
+		if ($params instanceof Filter\Property\EqualsParams)
 		{
 			$valuesParam = uniqid('vp');
 
-			$orX->add(
-				$expr->in($subAlias . '.' . $propertyNameToFilter, ':' . $valuesParam)
-			);
+			$queryBuilder->setParameter($valuesParam, $params->getValues());
 
-			$queryBuilder->setParameter($valuesParam, $this->params->getValues());
+			return $expr->in($subAlias . '.' . $propertyNameToFilter, ':' . $valuesParam);
 		}
 
-		if ($this->params instanceof Filter\Property\NullParams)
+		if ($params instanceof Filter\Property\NullParams)
 		{
-			$orX->add(
-				$this->params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter)
-			);
+			return $params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter);
 		}
 
-		if ($this->params instanceof Filter\Property\BooleanParams)
+		if ($params instanceof Filter\Property\BooleanParams)
 		{
-			$orX->add(
-				$this->params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter)
-			);
+			return $params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter);
 		}
 
-		if ($this->params instanceof Filter\Property\DateParams)
+		if ($params instanceof Filter\Property\DateParams)
 		{
-			$orX->add(
-				$this->params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter)
-			);
+			return $params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter);
 		}
 
-		$subQb->andWhere($orX);
-
-		$queryBuilder->andWhere(
-			$expr->exists($subQb->getDQL())
-		);
+		throw new Exception('Could not handle params');
 	}
 }
