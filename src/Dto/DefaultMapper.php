@@ -8,12 +8,14 @@ use Common\Dto\CreateOptions\Generic;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Exception;
+use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Throwable;
 
 class DefaultMapper
 {
 	public function __construct(
+		private readonly ContainerInterface $container,
 		private readonly KeyConfig $keyConfig
 	)
 	{
@@ -140,6 +142,23 @@ class DefaultMapper
 			{
 				$data[$property->getName()] = $value;
 			}
+		}
+
+		$dataManipulatorClass = $mappingConfig?->getArguments()['dataManipulator'] ?? null;
+
+		if ($dataManipulatorClass)
+		{
+			/**
+			 * @var Mapping\DataManipulator $dataManipulator
+			 */
+			$dataManipulator = $this->container->get($dataManipulatorClass);
+
+			$data = $dataManipulator
+				->manipulate(
+					Mapping\DataManipulationParams::create()
+						->setData($data)
+				)
+				->getData();
 		}
 
 		return new $dtoClass($dtoKey, $data);
