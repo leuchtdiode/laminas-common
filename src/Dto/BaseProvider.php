@@ -7,9 +7,11 @@ use Common\Db\Filter\Property;
 use Common\Db\FilterChain;
 use Common\Dto\Provide\HandleFilterParams;
 use Common\Dto\Provide\HandleFilterResult;
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Psr\Container\ContainerInterface;
+use Throwable;
 
 abstract class BaseProvider
 {
@@ -55,6 +57,30 @@ abstract class BaseProvider
 					);
 				}
 
+				if ($filterType === 'boolean')
+				{
+					$filterChain->addFilter(
+						Property::filter(
+							Property\BooleanParams::byValue($value['filterValue'])
+								->setPropertyChain(
+									Property\PropertyChain::buildFromString($filterItem->getProperty())
+								)
+						)
+					);
+				}
+
+				if ($filterType === 'date')
+				{
+					$filterChain->addFilter(
+						Property::filter(
+							Property\DateParams::create($value['dateType'], new DateTime($value['date']))
+								->setPropertyChain(
+									Property\PropertyChain::buildFromString($filterItem->getProperty())
+								)
+						)
+					);
+				}
+
 				// more generic filters here
 			}
 		}
@@ -64,6 +90,9 @@ abstract class BaseProvider
 		return $result;
 	}
 
+	/**
+	 * @throws Throwable
+	 */
 	public function byId($id, ?CreateOptions $createOptions = null): ?Dto
 	{
 		$repository = $this->getRepository();
@@ -75,6 +104,7 @@ abstract class BaseProvider
 
 	/**
 	 * @return Dto[]
+	 * @throws Throwable
 	 */
 	public function all(?CreateOptions $createOptions = null): array
 	{
@@ -88,6 +118,7 @@ abstract class BaseProvider
 
 	/**
 	 * @return Dto[]
+	 * @throws Throwable
 	 */
 	public function filter(FilterData $filterData, ?CreateOptions $createOptions = null): array
 	{
@@ -105,9 +136,6 @@ abstract class BaseProvider
 		);
 	}
 
-	/**
-	 * @return mixed[]
-	 */
 	public function filterAndReturnIds(FilterData $filterData): array
 	{
 		return $this
@@ -133,6 +161,9 @@ abstract class BaseProvider
 			->countWithFilter($filterChain);
 	}
 
+	/**
+	 * @throws Throwable
+	 */
 	protected function createDto(Entity $entity, ?CreateOptions $createOptions = null): Dto
 	{
 		return $this->defaultMapper->map(
@@ -145,6 +176,7 @@ abstract class BaseProvider
 	/**
 	 * @param Entity[] $entities
 	 * @return Dto[]
+	 * @throws Throwable
 	 */
 	protected function createDtos(array $entities, ?CreateOptions $createOptions = null): array
 	{

@@ -16,6 +16,11 @@ class BooleanParams extends BaseParams
 	{
 	}
 
+	public static function byValue(bool $yesOrNo): static
+	{
+		return new static($yesOrNo);
+	}
+
 	public static function yes(): static
 	{
 		return new static(true);
@@ -29,8 +34,6 @@ class BooleanParams extends BaseParams
 	public function getComparison(QueryBuilder $queryBuilder, string $field): Comparison
 	{
 		$expr = $queryBuilder->expr();
-
-		$comparison = null;
 
 		if ($this->yesOrNo)
 		{

@@ -25,6 +25,11 @@ class DateParams extends BaseParams
 
 	}
 
+	public static function create(string $type, DateTime $dateTime): static
+	{
+		return new static($type, $dateTime);
+	}
+
 	public static function min(DateTime $dateTime): static
 	{
 		return new static(self::TYPE__MIN, $dateTime);
@@ -60,8 +65,6 @@ class DateParams extends BaseParams
 		$exp = $queryBuilder->expr();
 
 		$valueParam = uniqid('vp');
-		$value      = null;
-		$composite  = null;
 
 		switch ($this->type)
 		{
