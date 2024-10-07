@@ -115,7 +115,7 @@ abstract class BaseSaver
 		{
 			// TODO auto trim
 
-			// do not fail if property is sent which does not exist, just log warning and skip it
+			// do not fail if property is sent which does not exist
 			try
 			{
 				$property = $reflection->getProperty($property);
@@ -189,7 +189,12 @@ abstract class BaseSaver
 						|| $propertyTypeClass === ArrayCollection::class
 					)
 					{
-						$collection = new ArrayCollection();
+						$getter = 'get' . ucfirst($property->getName());
+
+						// use new collection if all values are new, because otherwise we have duplicates
+						$collection = $this->allValuesNew($value)
+							? new ArrayCollection()
+							: $entity->{$getter}();
 
 						foreach ($value as $v)
 						{
@@ -260,6 +265,16 @@ abstract class BaseSaver
 		$transaction->addEntity($entity);
 
 		return $handleItemResult;
+	}
+
+	private function allValuesNew(array $values): bool
+	{
+		$withoutId = array_filter(
+			$values,
+			fn(array $item) => empty($item['id'] ?? null)
+		);
+
+		return count($withoutId) === count($values);
 	}
 
 	private function arrayWithoutId(array $array): array
