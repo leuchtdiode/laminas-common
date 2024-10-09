@@ -9,22 +9,14 @@ use Attribute;
 class MappingConfig
 {
 	/**
-	 * @var string[]
-	 */
-	public array $propertiesToIgnoreByDefault;
-
-	/**
-	 * @var string[]
-	 */
-	private array $forceProperties;
-
-	/**
 	 * @param string[] $propertiesToIgnoreByDefault
 	 * @param string[] $forceProperties
 	 */
-	public function __construct(array $propertiesToIgnoreByDefault = [], array $forceProperties = [])
+	public function __construct(
+		private readonly array $propertiesToIgnoreByDefault = [],
+		private readonly array $forceProperties = [],
+		private readonly ?string $dataManipulator = null
+	)
 	{
-		$this->propertiesToIgnoreByDefault = $propertiesToIgnoreByDefault;
-		$this->forceProperties             = $forceProperties;
 	}
 }

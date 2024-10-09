@@ -116,6 +116,14 @@ abstract class BaseProvider
 	}
 
 	/**
+	 * @throws Throwable
+	 */
+	public function reload(Dto $dto, ?CreateOptions $createOptions = null): ?Dto
+	{
+		return $this->byId($dto->getId(), $createOptions);
+	}
+
+	/**
 	 * @return Dto[]
 	 * @throws Throwable
 	 */

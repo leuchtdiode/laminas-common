@@ -5,6 +5,7 @@ namespace Common\Dto;
 
 use Common\Db\EntityRepository;
 use Common\Dto\Save\HandleItemParams;
+use Common\Dto\Save\SaveConfig;
 use Common\Dto\Save\Transformer;
 use Common\Dto\Save\TransformParams;
 use Common\Dto\Save\Validator;
@@ -41,6 +42,8 @@ abstract class BaseSaver
 
 		$saveTransaction = new Save\Transaction();
 
+		$isAddition = empty($params->getDtoId());
+
 		$firstHandleItemResult = $this->handleItem(
 			HandleItemParams::create()
 				->setTransaction($saveTransaction)
@@ -66,13 +69,32 @@ abstract class BaseSaver
 			$this->entityManager->flush();
 		}
 
-		$result->setSuccess(true);
-		$result->setDto(
-			$this->defaultMapper->map(
-				DefaultMapParams::create()
-					->setEntity($entity)
-			)
+		$dto = $this->defaultMapper->map(
+			DefaultMapParams::create()
+				->setEntity($entity)
 		);
+
+		$saveConfig    = (new ReflectionClass($this))->getAttributes(SaveConfig::class)[0] ?? null;
+		$postSaveClass = $saveConfig?->getArguments()['postSave'] ?? null;
+
+		if ($postSaveClass)
+		{
+			/**
+			 * @var Save\PostSave $postSave
+			 */
+			$postSave = $this->container->get($postSaveClass);
+
+			$dto = $postSave
+				->handle(
+					Save\PostSaveParams::create()
+						->setDto($dto)
+						->setAddition($isAddition)
+				)
+				->getDto();
+		}
+
+		$result->setSuccess(true);
+		$result->setDto($dto);
 
 		return $result;
 	}
