@@ -35,24 +35,28 @@ class BooleanParams extends BaseParams
 	{
 		$expr = $queryBuilder->expr();
 
+		$parameter = uniqid('p');
+
 		if ($this->yesOrNo)
 		{
-			$comparison = $expr->eq($field, true);
+			$comparison = $expr->eq($field, ':' . $parameter);
 		}
 		else
 		{
 			if ($this->nullMeansNo)
 			{
 				$comparison = $expr->orX(
-					$expr->eq($field, false),
+					$expr->eq($field, ':' . $parameter),
 					$expr->isNull($field),
 				);
 			}
 			else
 			{
-				$comparison = $expr->eq($field, false);
+				$comparison = $expr->eq($field, ':' . $parameter);
 			}
 		}
+
+		$queryBuilder->setParameter($parameter, $this->yesOrNo);
 
 		return $comparison;
 	}
