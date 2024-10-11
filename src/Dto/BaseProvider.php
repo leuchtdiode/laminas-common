@@ -57,6 +57,20 @@ abstract class BaseProvider
 					);
 				}
 
+				if ($filterType === 'not-equals')
+				{
+					$filterChain->addFilter(
+						Property::filter(
+							Property\EqualsParams::create()
+								->setPropertyChain(
+									Property\PropertyChain::buildFromString($filterItem->getProperty())
+								)
+								->setValues($value['filterValues'])
+								->setNot(true)
+						)
+					);
+				}
+
 				if ($filterType === 'boolean')
 				{
 					$filterChain->addFilter(

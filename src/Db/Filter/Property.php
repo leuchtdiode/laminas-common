@@ -141,11 +141,7 @@ class Property implements Filter
 
 		if ($params instanceof Filter\Property\EqualsParams)
 		{
-			$valuesParam = uniqid('vp');
-
-			$queryBuilder->setParameter($valuesParam, $params->getValues());
-
-			return $expr->in($subAlias . '.' . $propertyNameToFilter, ':' . $valuesParam);
+			return $params->getComparison($queryBuilder, $subAlias . '.' . $propertyNameToFilter);
 		}
 
 		if ($params instanceof Filter\Property\NullParams)
