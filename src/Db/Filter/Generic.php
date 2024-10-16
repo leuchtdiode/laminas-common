@@ -42,13 +42,14 @@ abstract class Generic implements Filter
 
 		foreach ($values as $value)
 		{
-			$conditions[] = $this->getCondition($exp, $value);
+			$conditions[] = $this->getCondition($queryBuilder, $exp, $value);
 		}
 
 		$queryBuilder->andWhere(new Andx($conditions));
 	}
 
 	private function getCondition(
+		QueryBuilder $queryBuilder,
 		Expr $exp,
 		string $value
 	): Orx
@@ -57,14 +58,33 @@ abstract class Generic implements Filter
 
 		foreach ($this->getColumns() as $column => $mode)
 		{
-			$condition = match ($mode)
+			$param = uniqid('p');
+
+			switch ($mode)
 			{
-				self::EQ => $exp->eq($column, $exp->literal($value)),
-				self::LIKE => $exp->like($column, $exp->literal("%{$value}%")),
-				self::STARTS_WITH => $exp->like($column, $exp->literal("{$value}%")),
-				self::ENDS_WITH => $exp->like($column, $exp->literal("%{$value}")),
-				default => throw new RuntimeException("invalid mode in string filter"),
-			};
+				case self::EQ:
+					$queryBuilder->setParameter($param, $value);
+					$condition = $exp->eq($column, ':' . $param);
+					break;
+
+				case self::LIKE:
+					$queryBuilder->setParameter($param, "%$value%");
+					$condition = $exp->like($column, ':' . $param);
+					break;
+
+				case self::STARTS_WITH:
+					$queryBuilder->setParameter($param, "$value%");
+					$condition = $exp->like($column, ':' . $param);
+					break;
+
+				case self::ENDS_WITH:
+					$queryBuilder->setParameter($param, "%$value");
+					$condition = $exp->like($column, ':' . $param);
+					break;
+
+				default:
+					throw new RuntimeException("invalid mode in string filter");
+			}
 
 			$conditions[] = $condition;
 		}
