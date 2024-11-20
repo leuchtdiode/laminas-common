@@ -108,6 +108,30 @@ abstract class BaseProvider
 					);
 				}
 
+				if ($filterType === 'null')
+				{
+					$filterChain->addFilter(
+						Property::filter(
+							Property\NullParams::isNull()
+								->setPropertyChain(
+									Property\PropertyChain::buildFromString($filterItem->getProperty())
+								)
+						)
+					);
+				}
+
+				if ($filterType === 'not-null')
+				{
+					$filterChain->addFilter(
+						Property::filter(
+							Property\NullParams::isNotNull()
+								->setPropertyChain(
+									Property\PropertyChain::buildFromString($filterItem->getProperty())
+								)
+						)
+					);
+				}
+
 				// more generic filters here
 			}
 		}
