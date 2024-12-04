@@ -157,6 +157,7 @@ class DefaultMapper
 				->manipulate(
 					Mapping\DataManipulationParams::create()
 						->setData($data)
+						->setEntity($entity)
 				)
 				->getData();
 		}
