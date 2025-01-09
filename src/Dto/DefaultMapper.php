@@ -5,6 +5,8 @@ namespace Common\Dto;
 
 use Common\Db\Entity as CommonDbEntity;
 use Common\Dto\CreateOptions\Generic;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Exception;
@@ -103,6 +105,11 @@ class DefaultMapper
 				if (method_exists($value, '__toString'))
 				{
 					$data[$property->getName()] = $value->__toString();
+				}
+
+				if ($value instanceof DateTime || $value instanceof DateTimeImmutable)
+				{
+					$data[$property->getName()] = $value->format('c');
 				}
 
 				if ($params->isResolveRelations() || in_array($property->getName(), $forceProperties))
