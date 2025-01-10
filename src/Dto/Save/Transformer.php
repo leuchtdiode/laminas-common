@@ -24,8 +24,8 @@ class Transformer
 	];
 
 	const DATE_TYPES_CARBON = [
-		'date',
-		'date_immutable',
+		'carbondate',
+		'carbondate_immutable',
 	];
 
 	const DATETIME_TYPES = [
