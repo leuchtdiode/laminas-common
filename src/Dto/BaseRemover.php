@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Common\Dto;
 
 use Common\Db\EntityRepository;
+use Common\Dto\Remove\RemoveConfig;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 use Throwable;
 
 abstract class BaseRemover
@@ -48,6 +50,24 @@ abstract class BaseRemover
 
 		$this->entityManager->remove($entity);
 		$this->entityManager->flush();
+
+		$removeConfig    = (new ReflectionClass($this))->getAttributes(RemoveConfig::class)[0] ?? null;
+		$postRemoveClass = $removeConfig?->getArguments()['postRemove'] ?? null;
+
+		if ($postRemoveClass)
+		{
+			/**
+			 * @var Remove\PostRemove $postSave
+			 */
+			$postRemove = $this->container->get($postRemoveClass);
+
+			$postRemove
+				->handle(
+					Remove\PostRemoveParams::create()
+						->setDto($dto)
+						->setEntity($entity)
+				);
+		}
 
 		$result->setSuccess(true);
 
