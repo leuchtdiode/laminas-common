@@ -6,13 +6,14 @@ use Doctrine\ORM\QueryBuilder;
 
 abstract class Equals implements Filter
 {
-	const VALUE         = 'value';
-	const VALUE_OR_NULL = 'valueOrNull';
-	const NOT_VALUE     = 'notValue';
-	const NULL          = 'null';
-	const NOT_NULL      = 'notNull';
-	const IN            = 'in';
-	const NOT_IN        = 'notIn';
+	const VALUE             = 'value';
+	const VALUE_OR_NULL     = 'valueOrNull';
+	const NOT_VALUE_OR_NULL = 'notValueOrNull';
+	const NOT_VALUE         = 'notValue';
+	const NULL              = 'null';
+	const NOT_NULL          = 'notNull';
+	const IN                = 'in';
+	const NOT_IN            = 'notIn';
 
 	private string $type;
 
@@ -39,6 +40,11 @@ abstract class Equals implements Filter
 	public static function isOrNull(mixed $parameter): static
 	{
 		return new static(self::VALUE_OR_NULL, $parameter);
+	}
+
+	public static function isNotOrNull(mixed $parameter): static
+	{
+		return new static(self::NOT_VALUE_OR_NULL, $parameter);
 	}
 
 	public static function isNot(mixed $parameter): static
@@ -91,6 +97,19 @@ abstract class Equals implements Filter
 					->andWhere(
 						$expr->orX(
 							$expr->eq($this->getField(), ':' . $parameterName),
+							$expr->isNull($this->getField())
+						)
+					)
+					->setParameter($parameterName, $this->parameter);
+
+				break;
+
+			case self::NOT_VALUE_OR_NULL:
+
+				$queryBuilder
+					->andWhere(
+						$expr->orX(
+							$expr->neq($this->getField(), ':' . $parameterName),
 							$expr->isNull($this->getField())
 						)
 					)
