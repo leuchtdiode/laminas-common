@@ -44,6 +44,15 @@ class BaseDto implements Dto, ArrayHydratable
 		return $this->data[$property];
 	}
 
+	public function isEqualTo(Dto|string $dtoOrId): bool
+	{
+		$dtoOrId = $dtoOrId instanceof Dto
+			? $dtoOrId->getId()
+			: $dtoOrId;
+
+		return $this->getId() === $dtoOrId;
+	}
+
 	public function getKey(): string
 	{
 		return $this->key;
