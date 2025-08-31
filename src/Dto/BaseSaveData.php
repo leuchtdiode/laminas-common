@@ -42,7 +42,7 @@ class BaseSaveData
 
 		$value = $arguments[0];
 
-		$property = lcfirst(str_replace('set', '', $name));
+		$property = lcfirst(substr($name, 3)); // remove "set" from name
 
 		$this->data[$property] = $value;
 
